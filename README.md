@@ -31,7 +31,6 @@
 ### 1.3 Relatório do Usuário
 
 # Classes Customizadas Para tratamento de Erro
-# Classes de Controle
 # Possíveis classes
 
 ## 1.Alternativa
