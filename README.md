@@ -1,3 +1,9 @@
+# Descrição do Problema
+O Sistema de Quiz Educacional é um projeto que permite que os Usuários respondam e criem quizzes com título, perguntas, número máximo de tentativas e tempo limite. O Usuário poderá cadastrar perguntas de múltipla escolha, cada uma com um enunciado, alternativas, nível de dificuldade (Fácil, Médio e Difícil) e tema. Além disso, o Usuário poderá gerar diferentes tipos de relatórios que podem fornecer o seu desempenho no Quiz, ranking de usuários e evolução do desempenho do Usuário.
+
+# Objetivo
+Desenvolver um sistema que permita que Usuários possam criar, gerenciar e responder quizzes com perguntas de múltipla escolha, fornecendo pontuação, desempenho e evolução.
+
 # Classes Geral
 
 ## 1.Tema
@@ -23,6 +29,7 @@
 
     + verificar_resposta() -> bool
     + verificar_duplicata() -> bool
+    + verificar_qtd_resposta() -> bool
     + peso() -> int
 
 ## 4.Usuário
@@ -30,13 +37,13 @@
     - username: str
     - email: str
     - senha: str
-    - tentativas: list(tentativas)    
+    - tentativas: lista
 
 ## 5.Tentativa
     - id: int
     - usuario: Usuario
     - quiz: Quiz
-    - repostas: list[int]
+    - repostas: list
     - pontuacao: int
     - tempo_total: int  
     - status_conclusao: bool
@@ -54,40 +61,41 @@
 
 ## 1. QuizService
     + criar_quiz() -> Quiz
-    + listar_quizzes() -> list[Quiz]
+    + listar_quizzes() -> list
     + adicionar_pergunta() -> bool
     + buscar_por_id() -> Quiz
 
 ## 2. TemaService
     + criar_tema() -> Tema
-    + listar_temas() -> list[Tema]
+    + listar_temas() -> list
     + buscar_por_id() -> Tema
 
 ## 3. UsuarioService
     + cadastrar() -> Usuario
     + atualizar_email() -> bool
-    + listar_usuario() -> list[Usuario]
+    + listar_usuario() -> list
     + buscar_por_id() -> Usuario
     + buscar_por_email() -> Usuario
 
 ## 4. PerguntaService
     + criar_pergunta() -> Pergunta
-    + listar_pergunta() -> list[Pergunta]
-    + listar_por_tema() -> list[Pergunta]
-    + buscar_por_id() -: list[Pergunta]
+    + listar_pergunta() -> list
+    + listar_por_tema() -> list
+    + buscar_por_id() -> list
 
 ## 5. TentativaService
     + reponder_quiz() -> Quiz
-    + listar_por_usuario() -> list[Tentativa]
-    + listar_por_usuario_e_quiz() -> list[Tentativa]
+    + listar_por_usuario() -> list
+    + listar_por_usuario_e_quiz() -> list
 
 ## 6. RelatorioService
-    + gerar_taxa_aprovacao() -> float
+    + calcular_taxa_aprovacao() -> float
     + gerar_distribuicao_notas() -> dict
     + gerar_ranking_usuarios() -> list
     + gerar_desempenho_usuario() -> dict
     + gerar_questoes_mais_erradas() -> list
+    + evolucaoo_usuario() -> list
 
-## 6. AuthService 
+## 7. AuthService 
     + login() -> bool
     + logout() -> bool
