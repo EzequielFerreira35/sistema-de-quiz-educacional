@@ -7,104 +7,87 @@
 ## 2.Quiz
     - id: int
     - titulo: str
-    - dificuldade: str
-    - tema_id: int
-    - pontuacao_maxima: int
     - tempo_limite: int
     - limite_tentativas: int
     - lista_perguntas: list
 
+    + calcular_pontuacao_maxima() -> float
+
 ## 3.Pergunta
     - id: int
-    - tema_id: int
+    - tema: Tema
     - enunciado: str
-    - alternativas: list
+    - alternativas: list[str]
     - indice_respota: int
-    
+    - dificuldade: str
+
+    + verificar_resposta() -> bool
+    + verificar_duplicata() -> bool
+    + peso() -> int
+
 ## 4.Usuário
     - id: int
     - username: str
     - email: str
     - senha: str
-    - status: bool
+    - tentativas: list(tentativas)    
 
 ## 5.Tentativa
     - id: int
-    - usuario_id: int
-    - quiz_id: int
+    - usuario: Usuario
+    - quiz: Quiz
+    - repostas: list[int]
     - pontuacao: int
-    - tempo: int
-    - acertos: int
-    - perguntas_acertadas: list
-    
-## 6.Estatística
-    - acertos: int
+    - tempo_total: int  
+    - status_conclusao: bool
+
+    + calcular_pontuacao() -> float
+    + taxa_acerto() -> float
+
+## 6.Relatório
+    data: str
+    nome: str
+    tipo: str
+    conteudo: dict
 
 # Classes de Serviço
 
 ## 1. QuizService
-    + criar_quiz()
-    + listar_quizzes()
-    + listar_por_tema_e_usuario()
-    + adicionar_pergunta()
-    + buscar_por_id()
+    + criar_quiz() -> Quiz
+    + listar_quizzes() -> list[Quiz]
+    + adicionar_pergunta() -> bool
+    + buscar_por_id() -> Quiz
 
 ## 2. TemaService
-    + criar_tema()
-    + listar_temas()
+    + criar_tema() -> Tema
+    + listar_temas() -> list[Tema]
+    + buscar_por_id() -> Tema
 
 ## 3. UsuarioService
-    + cadastrar()
-    + atualizar_email()
-    + remover()
-    + listar_usuario()
-    + buscar_por_id()
-    + buscar_por_email()
+    + cadastrar() -> Usuario
+    + atualizar_email() -> bool
+    + listar_usuario() -> list[Usuario]
+    + buscar_por_id() -> Usuario
+    + buscar_por_email() -> Usuario
 
 ## 4. PerguntaService
-    + criar_pergunta()
-    + listar_pergunta()
+    + criar_pergunta() -> Pergunta
+    + listar_pergunta() -> list[Pergunta]
+    + listar_por_tema() -> list[Pergunta]
+    + buscar_por_id() -: list[Pergunta]
 
 ## 5. TentativaService
-    + reponder_quiz()
-    + listar_por_usuario()
-    + listar_por_usuario_e_quiz()
+    + reponder_quiz() -> Quiz
+    + listar_por_usuario() -> list[Tentativa]
+    + listar_por_usuario_e_quiz() -> list[Tentativa]
 
-## 5. AuthService 
-    + login()
-    + logout()
+## 6. RelatorioService
+    + gerar_taxa_aprovacao() -> float
+    + gerar_distribuicao_notas() -> dict
+    + gerar_ranking_usuarios() -> list
+    + gerar_desempenho_usuario() -> dict
+    + gerar_questoes_mais_erradas() -> list
 
-# Classes de Dados
-
-## 1. Repository
-    + salvar()
-    + buscar_por_id()
-    + deletar()
-    + listar_todos()
-
-## 2. UsuarioRepository
-    + buscar_por_email()
-
-## 3. QuizRepository
-    + listar_por_tema()
-    + listar_por_tema_e_usuario()
-
-## 4. TemaRepository
-
-## 5. RelatorioRepository
-    + listar_por_usuario()
-    + listar_por_usuario_e_quiz()
-
-## 6. TentativaRepository
-    + listar_por_usuario()
-    + listar_por_usuario_e_quiz()
-
-# Classes de Relatórios
-
-## 1.Relatório
-### 1.1 Relatorio   Quiz
-### 1.2 RelatorioTema
-### 1.3 RelatorioUsuario
-### 1.4 RelatorioTentativa
-
-# Classes Customizadas Para tratamento de Erro
+## 6. AuthService 
+    + login() -> bool
+    + logout() -> bool
