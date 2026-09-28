@@ -1,101 +1,144 @@
-# Descrição do Problema
+## Descrição do Problema
 O Sistema de Quiz Educacional é um projeto que permite que os Usuários respondam e criem quizzes com título, perguntas, número máximo de tentativas e tempo limite. O Usuário poderá cadastrar perguntas de múltipla escolha, cada uma com um enunciado, alternativas, nível de dificuldade (Fácil, Médio e Difícil) e tema. Além disso, o Usuário poderá gerar diferentes tipos de relatórios que podem fornecer o seu desempenho no Quiz, ranking de usuários e evolução do desempenho do Usuário.
 
-# Objetivo
+## Objetivo
 Desenvolver um sistema que permita que Usuários possam criar, gerenciar e responder quizzes com perguntas de múltipla escolha, fornecendo pontuação, desempenho e evolução.
 
-# Classes Geral
+# Diagrama de Classes
 
-## 1.Tema
-    - id: int
-    - nome: str
+```mermaid
+classDiagram
+    class Tema{
+        - id: int
+        - nome: str
+    }
 
-## 2.Quiz
-    - id: int
-    - titulo: str
-    - tempo_limite: int
-    - limite_tentativas: int
-    - lista_perguntas: list
+    class Quiz {
+        - id: int
+        + titulo: str
+        + tempo_limite: int
+        + limite_tentativas: int
+        - lista_perguntas: list
+         + calcular_pontuacao_maxima() -> float
+    }
 
-    + calcular_pontuacao_maxima() -> float
+    class Pergunta {
+        - id: int
+        + tema: Tema
+        + enunciado: str
+        + alternativas: list[str]
+        - indice_resposta: int
+        + dificuldade: str
 
-## 3.Pergunta
-    - id: int
-    - tema: Tema
-    - enunciado: str
-    - alternativas: list[str]
-    - indice_respota: int
-    - dificuldade: str
+        + verificar_resposta() -> bool
+        + verificar_duplicata() -> bool
+        + verificar_qtd_resposta() -> bool
+        + peso() -> int
+        }
 
-    + verificar_resposta() -> bool
-    + verificar_duplicata() -> bool
-    + verificar_qtd_resposta() -> bool
-    + peso() -> int
+    class Usuario {    
+        - id: int
+        + username: str
+        + email: str
+        - senha: str
+        - tentativas: lista
+    }
 
-## 4.Usuário
-    - id: int
-    - username: str
-    - email: str
-    - senha: str
-    - tentativas: lista
+    class Tentativa {
+        - id: int
+        + usuario: Usuario
+        + quiz: Quiz
+        + respostas: list
+        + pontuacao: int
+        + tempo_total: int  
+        + status_conclusao: bool
 
-## 5.Tentativa
-    - id: int
-    - usuario: Usuario
-    - quiz: Quiz
-    - repostas: list
-    - pontuacao: int
-    - tempo_total: int  
-    - status_conclusao: bool
+        + calcular_pontuacao() -> float
+        + taxa_acerto() -> float
+        }
+    
+    class Relatorio {
+        + data: str
+        + nome: str
+        + tipo: str
+        + conteudo: dict
+    }
 
-    + calcular_pontuacao() -> float
-    + taxa_acerto() -> float
+    class QuizService {
+        + criar_quiz() -> Quiz
+        + listar_quizzes() -> list
+        + adicionar_pergunta() -> bool
+        + buscar_por_id() -> Quiz
+        }
 
-## 6.Relatório
-    data: str
-    nome: str
-    tipo: str
-    conteudo: dict
+    class TemaService {
+        + criar_tema() -> Tema
+        + listar_temas() -> list
+        + buscar_por_id() -> Tema
+        }
 
-# Classes de Serviço
+    class UsuarioService {
+        + cadastrar() -> Usuario
+        + atualizar_email() -> bool
+        + listar_usuario() -> list
+        + buscar_por_id() -> Usuario
+        + buscar_por_email() -> Usuario
+        }
 
-## 1. QuizService
-    + criar_quiz() -> Quiz
-    + listar_quizzes() -> list
-    + adicionar_pergunta() -> bool
-    + buscar_por_id() -> Quiz
+    class PerguntaService {
+        + criar_pergunta() -> Pergunta
+        + listar_pergunta() -> list
+        + listar_por_tema() -> list
+        + buscar_por_id() -> list }
 
-## 2. TemaService
-    + criar_tema() -> Tema
-    + listar_temas() -> list
-    + buscar_por_id() -> Tema
+    class TentativaService {
+        + reponder_quiz() -> Quiz
+        + listar_por_usuario() -> list
+        + listar_por_usuario_e_quiz() -> list 
+        }
 
-## 3. UsuarioService
-    + cadastrar() -> Usuario
-    + atualizar_email() -> bool
-    + listar_usuario() -> list
-    + buscar_por_id() -> Usuario
-    + buscar_por_email() -> Usuario
+    class RelatorioService {
+        + calcular_taxa_aprovacao() -> float
+        + gerar_distribuicao_notas() -> dict
+        + gerar_ranking_usuarios() -> list
+        + gerar_desempenho_usuario() -> dict
+        + gerar_questoes_mais_erradas() -> list
+        + evolucao_usuario() -> list
+        }
 
-## 4. PerguntaService
-    + criar_pergunta() -> Pergunta
-    + listar_pergunta() -> list
-    + listar_por_tema() -> list
-    + buscar_por_id() -> list
+    class AuthService {
+        + login() -> bool
+        + logout() -> bool
+        }
 
-## 5. TentativaService
-    + reponder_quiz() -> Quiz
-    + listar_por_usuario() -> list
-    + listar_por_usuario_e_quiz() -> list
+    UsuarioService ..> Usuario 
+    QuizService ..> Quiz
+    TemaService ..> Tema
+    PerguntaService ..>  Pergunta
+    TentativaService ..> Tentativa
+    RelatorioService ..> Relatorio
+    AuthService ..> Usuario
 
-## 6. RelatorioService
-    + calcular_taxa_aprovacao() -> float
-    + gerar_distribuicao_notas() -> dict
-    + gerar_ranking_usuarios() -> list
-    + gerar_desempenho_usuario() -> dict
-    + gerar_questoes_mais_erradas() -> list
-    + evolucaoo_usuario() -> list
+    Quiz "1" *-- "*" Pergunta
+    Pergunta "*" o-- "*" Tema
+    Tentativa "*" --> "1" Quiz
+    Usuario "1" *-- "*" Tentativa
 
-## 7. AuthService 
-    + login() -> bool
-    + logout() -> bool
+```
+
+
+# Lista das Classes
+
+* Tema
+* Quiz
+* Pergunta
+* Usuário
+* Tentativa
+* Relatório
+* QuizService
+* TemaService
+* UsuarioService
+* PerguntaService
+* TentativaService
+* RelatorioService
+* AuthService 
