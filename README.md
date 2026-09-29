@@ -21,7 +21,7 @@ classDiagram
         + tempo_limite: int
         + limite_tentativas: int
         - lista_perguntas: list
-         + calcular_pontuacao_maxima() -> float
+        + calcular_pontuacao_maxima() -> float
     }
 
     class Pergunta {
@@ -66,32 +66,34 @@ classDiagram
         + conteudo: dict
     }
 
+    class BaseService {
+        # itens: list
+        + criar()
+        + listar() list
+        + buscar_por_id()
+        + salvar() None
+        + carregar() None
+    }
+
     class QuizService {
         + criar_quiz() -> Quiz
-        + listar_quizzes() -> list
         + adicionar_pergunta() -> bool
-        + buscar_por_id() -> Quiz
         }
 
     class TemaService {
         + criar_tema() -> Tema
-        + listar_temas() -> list
-        + buscar_por_id() -> Tema
         }
 
     class UsuarioService {
         + cadastrar() -> Usuario
         + atualizar_email() -> bool
-        + listar_usuario() -> list
-        + buscar_por_id() -> Usuario
         + buscar_por_email() -> Usuario
         }
 
     class PerguntaService {
         + criar_pergunta() -> Pergunta
-        + listar_pergunta() -> list
         + listar_por_tema() -> list
-        + buscar_por_id() -> list }
+        }
 
     class TentativaService {
         + reponder_quiz() -> Quiz
@@ -120,14 +122,25 @@ classDiagram
     TentativaService ..> Tentativa
     RelatorioService ..> Relatorio
     AuthService ..> Usuario
+    RelatorioService ..> Tentativa 
+    RelatorioService ..> Usuario 
+
 
     Quiz "1" *-- "*" Pergunta
     Pergunta "*" o-- "*" Tema
     Tentativa "*" --> "1" Quiz
+    Tentativa "*" --> "1" Usuario
     Usuario "1" *-- "*" Tentativa
 
-```
+    BaseService <|-- TemaService
+    BaseService <|-- QuizService
+    BaseService <|-- UsuarioService
+    BaseService <|-- PerguntaService
+    BaseService <|-- TentativaService
+    BaseService <|-- RelatorioService
+    BaseService <|-- AuthService
 
+```
 
 # Lista das Classes
 
@@ -137,6 +150,7 @@ classDiagram
 * Usuário
 * Tentativa
 * Relatório
+* BaseService
 * QuizService
 * TemaService
 * UsuarioService

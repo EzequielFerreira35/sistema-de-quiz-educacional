@@ -9,8 +9,5 @@ class Quiz:
         - tempo_limite (int): Tempo limite do Quiz
         - limite_tentativas (int): Limite de Tentativas do Quiz
         - lista_perguntas (list): Lista de perguntas do Quiz
-
-    Métodos:
-        + calcular_pontuacao_maxima() -> float: Calcula a pontuação máxima do Quiz com base nos pesos das perguntas
     """
     pass
