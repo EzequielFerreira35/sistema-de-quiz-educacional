@@ -18,9 +18,10 @@ classDiagram
     class Quiz {
         - id: str
         + titulo: str
-        + tempo_limite: int
-        + limite_tentativas: int
+        - tempo_limite: int
+        - limite_tentativas: int
         - lista_perguntas: list
+        + adicionar_pergunta() -> bool
         + calcular_pontuacao_maxima() -> float
     }
 
@@ -44,6 +45,7 @@ classDiagram
         + email: str
         - senha: str
         - tentativas: lista
+        + registrar_tentativa() -> bool
     }
 
     class Tentativa {

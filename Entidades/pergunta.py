@@ -113,7 +113,7 @@ class Pergunta:
     @staticmethod
     def verificar_qtd_resposta(alternativas: list[str]) -> bool:
         tamanho = len(alternativas)
-        return 2 <= tamanho <= 5 # Provisorio(enquanto ainda não tem as settings)
+        return 3 <= tamanho <= 5 # Provisorio(enquanto ainda não tem as settings)
     
     def peso(self) -> int:
         return self.PESO_PROVISORIO[self.__dificuldade]
