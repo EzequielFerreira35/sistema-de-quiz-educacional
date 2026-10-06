@@ -50,10 +50,10 @@ classDiagram
 
     class Tentativa {
         - id: str
-        + usuario: Usuario
-        + quiz: Quiz
+        - usuario: Usuario
+        - quiz: Quiz
         + respostas: list
-        + pontuacao: int
+        - pontuacao: int
         + tempo_total: int  
         + status_conclusao: bool
 
