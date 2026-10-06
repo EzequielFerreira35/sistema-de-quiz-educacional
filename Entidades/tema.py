@@ -15,3 +15,16 @@ class Tema:
     @property
     def id(self) -> str:
         return self.__id
+
+    @property
+    def nome(self) -> str:
+        return self.__nome
+
+    @nome.setter
+    def nome(self, valor: str) -> None: 
+        if not valor.strip():
+            raise ValueError("O nome do tema não pode ser vazio!")
+        if not isinstance(valor, str):
+            raise ValueError("O nome do tema deve ser do tipo string!")
+
+        self.__nome = valor
