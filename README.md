@@ -11,12 +11,12 @@ Desenvolver um sistema que permita que Usuários possam criar, gerenciar e respo
 ```mermaid
 classDiagram
     class Tema{
-        - id: int
+        - id: str
         - nome: str
     }
 
     class Quiz {
-        - id: int
+        - id: str
         + titulo: str
         + tempo_limite: int
         + limite_tentativas: int
@@ -25,7 +25,7 @@ classDiagram
     }
 
     class Pergunta {
-        - id: int
+        - id: str
         + tema: Tema
         + enunciado: str
         + alternativas: list[str]
@@ -39,7 +39,7 @@ classDiagram
         }
 
     class Usuario {    
-        - id: int
+        - id: str
         + username: str
         + email: str
         - senha: str
@@ -47,7 +47,7 @@ classDiagram
     }
 
     class Tentativa {
-        - id: int
+        - id: str
         + usuario: Usuario
         + quiz: Quiz
         + respostas: list
@@ -60,7 +60,7 @@ classDiagram
         }
     
     class Relatorio {
-        + data: str
+        + data: datetime
         + nome: str
         + tipo: str
         + conteudo: dict
@@ -96,7 +96,7 @@ classDiagram
         }
 
     class TentativaService {
-        + reponder_quiz() -> Quiz
+        + reponder_quiz() -> Tentativa
         + listar_por_usuario() -> list
         + listar_por_usuario_e_quiz() -> list 
         }
@@ -129,7 +129,6 @@ classDiagram
     Quiz "1" *-- "*" Pergunta
     Pergunta "*" o-- "*" Tema
     Tentativa "*" --> "1" Quiz
-    Tentativa "*" --> "1" Usuario
     Usuario "1" *-- "*" Tentativa
 
     BaseService <|-- TemaService
@@ -137,8 +136,7 @@ classDiagram
     BaseService <|-- UsuarioService
     BaseService <|-- PerguntaService
     BaseService <|-- TentativaService
-    BaseService <|-- RelatorioService
-    BaseService <|-- AuthService
+
 
 ```
 
