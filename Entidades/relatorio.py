@@ -18,8 +18,32 @@ class Relatorio:
         self.__data = datetime.today()
         self.tipo = tipo
         self.nome = nome
-        self.conteudo = conteudo
+        self.__conteudo = conteudo
 
     @property
     def data_gerada(self) -> datetime:
         return self.__data
+    
+    @property
+    def nome(self) -> str:
+        return self.__nome
+    
+    @nome.setter
+    def nome(self, valor: str):
+        if not valor.strip() or not isinstance(valor, str):
+            raise ValueError("Nome deve ser do tipo string!")
+        self.__nome = valor.strip()
+
+    @property
+    def tipo(self) -> str:
+        return self.__tipo
+
+    @tipo.setter
+    def tipo(self, valor: str):
+        if not valor.strip() or not isinstance(valor, str):
+            raise ValueError("Ripo deve ser do tipo string!")
+        self.__tipo = valor.strip()
+
+    @property
+    def conteudo(self) -> dict:
+        return self.__conteudo

@@ -55,7 +55,7 @@ classDiagram
         + respostas: list
         - pontuacao: int
         + tempo_total: int  
-        + status_conclusao: bool
+        - status_conclusao: bool
 
         + calcular_pontuacao() -> float
         + taxa_acerto() -> float
@@ -65,7 +65,7 @@ classDiagram
         + data: datetime
         + nome: str
         + tipo: str
-        + conteudo: dict
+        - conteudo: dict
     }
 
     class BaseService {
