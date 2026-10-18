@@ -1,8 +1,8 @@
 import uuid
-from pergunta import Pergunta
+from .pergunta import Pergunta
 class Quiz:
     TEMPO_LIMITE_PROVISORIO = 1200 # provisorio
-    LIMITE_TENTATIVAS = 3
+    LIMITE_TENTATIVAS = 3 # provisorio
     """
     Essa classe representa um quiz  com um conjunto de perguntas com título, limite de tentativas, tempo limite(opcional) 
     e pontuação máxima calculada automaticamente.

@@ -1,5 +1,6 @@
 import uuid
-from tema import Tema
+from .tema import Tema
+
 class Pergunta:
     PESO_PROVISORIO = {"facil": 1, "medio": 2, "dificil": 3} # Variavel provisória que será removida depois de criar as settings
     """

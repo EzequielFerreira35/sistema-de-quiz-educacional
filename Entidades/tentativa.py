@@ -1,6 +1,5 @@
 import uuid
-from usuario import Usuario
-from quiz import Quiz
+from .quiz import Quiz
 
 class Tentativa:
     """
@@ -16,14 +15,11 @@ class Tentativa:
         - status_conclusao (bool): Representa se o quiz foi concluído ou não
     """
     def __init__(self,
-                id: str,
-                usuario: Usuario,
                 quiz: Quiz,
                 respostas: list,
                 tempo_total: int,  
     ) -> None:
         self.__id = str(uuid.uuid4())
-        self.__usuario = usuario
         self.__quiz = quiz
         self.respostas = respostas
         self.__pontuacao = 0.0
@@ -33,10 +29,6 @@ class Tentativa:
     @property
     def id(self) -> str:
         return self.__id
-
-    @property
-    def usuario(self) -> Usuario:
-        return self.__usuario
 
     @property
     def quiz(self) -> Quiz:

@@ -1,6 +1,6 @@
 import uuid
 import re
-from tentativa import Tentativa
+from .tentativa import Tentativa
 
 class Usuario:
     """
@@ -17,12 +17,16 @@ class Usuario:
                 nome: str,
                 email: str, 
                 senha: str,
+                id=None
     ) -> None:
-        self.__id = str(uuid.uuid4())
+        self.__id = id if id is not None else str(uuid.uuid4())
         self.username = nome
         self.email = email
         self.senha = senha
         self.__tentativas = []
+
+    def __str__(self) -> str:
+        return f"id={self.id}, username={self.username}, email={self.email}, senha={self.senha}, tentativas={self.tentativas}"
 
     @property
     def id(self) -> str:
@@ -86,3 +90,9 @@ class Usuario:
 
     def registrar_tentativa(self, tentativa: Tentativa):
         self.__tentativas.append(tentativa)
+
+    @classmethod
+    def from_row(cls, linha):
+        usuario = cls(nome=linha[1], email=linha[2], senha=linha[3], id=linha[0])
+
+        return usuario
