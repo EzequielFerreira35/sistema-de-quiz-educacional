@@ -14,11 +14,15 @@ class Quiz:
         - limite_tentativas (int): Limite de Tentativas do Quiz
         - lista_perguntas (list): Lista de perguntas do Quiz
     """
-    def __init__(self, titulo: str ) -> None:
-        self.__id = str(uuid.uuid4())
+    def __init__(self, titulo: str, id = None, 
+                tempo_limite: int | None = None, 
+                limite_tentativa: int | None = None
+    ) -> None:
+
+        self.__id = id if id is not None else str(uuid.uuid4())
         self.titulo = titulo
-        self.__tempo_limite = self.TEMPO_LIMITE_PROVISORIO
-        self.__limite_tentativas = self.LIMITE_TENTATIVAS
+        self.__tempo_limite = tempo_limite if tempo_limite is not None else self.TEMPO_LIMITE_PROVISORIO
+        self.__limite_tentativas = limite_tentativa if  limite_tentativa is not None else self.LIMITE_TENTATIVAS
         self.__lista_perguntas = []
 
     @property
@@ -44,7 +48,7 @@ class Quiz:
         return self.__tempo_limite
 
     @property
-    def limite_tentaticas(self) -> int:
+    def limite_tentativas(self) -> int:
         return self.__limite_tentativas
 
     @property

@@ -8,8 +8,11 @@ class Tema:
         - id (str): Número de identificação do Tema
         - nome (str): Número de identificação do Nome
     """
-    def __init__(self, nome) -> None:
-        self.__id = str(uuid.uuid4())
+    def __init__(self, nome: str, 
+                id: str | None = None
+    ) -> None:
+    
+        self.__id = id if id is not None else str(uuid.uuid4())
         self.__nome = nome
 
     @property
@@ -28,3 +31,11 @@ class Tema:
             raise ValueError("O nome do tema deve ser do tipo string!")
 
         self.__nome = valor
+
+    @classmethod
+    def from_row(cls, linha):
+        tema = cls(
+            id = linha[0],
+            nome = linha[1] 
+        )
+        return tema

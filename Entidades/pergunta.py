@@ -20,9 +20,11 @@ class Pergunta:
                 enunciado: str, 
                 alternativas: list[str], 
                 indice_resposta: int, 
-                dificuldade: str
+                dificuldade: str,
+                id: str | None = None
     ) -> None:
-        self.__id = str(uuid.uuid4())
+        
+        self.__id = id if id is not None else str(uuid.uuid4())
         self.tema = tema
         self.enunciado = enunciado
         self.alternativas = alternativas
@@ -118,3 +120,7 @@ class Pergunta:
     
     def peso(self) -> int:
         return self.PESO_PROVISORIO[self.__dificuldade]
+
+    @classmethod
+    def from_row(cls, linha):
+        ...

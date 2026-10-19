@@ -27,7 +27,7 @@ class InicizalizarDataBase:
             limite_tentativas INTEGER NOT NULL)""")
 
             conn.execute("""CREATE TABLE IF NOT EXISTS tema(
-            if TEXTE PRIMARY KEY,
+            id TEXTE PRIMARY KEY,
             nome TEXT NOT NULL)""")
 
             conn.execute("""CREATE TABLE IF NOT EXISTS tentativa(
@@ -61,3 +61,4 @@ class InicizalizarDataBase:
             id_tentativa TEXT NOT NULL,
             
             FOREIGN KEY (id_tentativa) REFERENCES tentativa(id))""")
+        conn.close()

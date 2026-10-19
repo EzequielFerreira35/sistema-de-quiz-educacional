@@ -17,9 +17,11 @@ class Tentativa:
     def __init__(self,
                 quiz: Quiz,
                 respostas: list,
-                tempo_total: int,  
+                tempo_total: int,
+                id: str | None = None  
     ) -> None:
-        self.__id = str(uuid.uuid4())
+        
+        self.__id = id if id is not None else str(uuid.uuid4())
         self.__quiz = quiz
         self.respostas = respostas
         self.__pontuacao = 0.0

@@ -17,8 +17,9 @@ class Usuario:
                 nome: str,
                 email: str, 
                 senha: str,
-                id=None
+                id: str | None = None
     ) -> None:
+        
         self.__id = id if id is not None else str(uuid.uuid4())
         self.username = nome
         self.email = email
@@ -93,6 +94,11 @@ class Usuario:
 
     @classmethod
     def from_row(cls, linha):
-        usuario = cls(nome=linha[1], email=linha[2], senha=linha[3], id=linha[0])
-
+        usuario = cls(
+            id=linha[0], 
+            nome=linha[1], 
+            email=linha[2], 
+            senha=linha[3]
+        )
+        
         return usuario
