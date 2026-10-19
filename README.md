@@ -89,7 +89,6 @@ classDiagram
     class UsuarioService {
         + cadastrar() -> Usuario
         + atualizar_email() -> bool
-        + buscar_por_email() -> Usuario
         }
 
     class PerguntaService {
@@ -100,9 +99,9 @@ classDiagram
         }
 
     class TentativaService {
-        + reponder_quiz() -> Tentativa
-        + listar_por_usuario() -> list
-        + listar_por_usuario_e_quiz() -> list 
+        + iniciar_quiz() -> Tentativa
+        + reponder_quiz() -> None
+        + terminar_quiz() -> bool
         }
 
     class RelatorioService {

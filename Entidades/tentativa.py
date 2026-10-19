@@ -1,5 +1,5 @@
 import uuid
-from Entidades.tema import Tema
+from .quiz import Quiz
 
 class Tentativa:
     """
@@ -15,7 +15,7 @@ class Tentativa:
         - status_conclusao (bool): Representa se o quiz foi concluído ou não
     """
     def __init__(self,
-                quiz: Tema,
+                quiz: Quiz,
                 respostas: list,
                 tempo_total: int,  
     ) -> None:
@@ -31,7 +31,7 @@ class Tentativa:
         return self.__id
 
     @property
-    def quiz(self) -> Tema:
+    def quiz(self) -> Quiz:
         return self.__quiz
 
     @property
