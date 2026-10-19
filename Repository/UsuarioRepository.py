@@ -6,10 +6,6 @@ import sqlite3
 class UsuarioRepository(ABC):
 
     @abstractmethod
-    def criar_tabela(self):
-        pass
-
-    @abstractmethod
     def deletar(self, usuario_id: str):
         pass
 

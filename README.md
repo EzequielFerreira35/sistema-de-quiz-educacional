@@ -95,6 +95,8 @@ classDiagram
     class PerguntaService {
         + criar_pergunta() -> Pergunta
         + listar_por_tema() -> list
+        + editar_pergunta() -> Pergunta
+        + excluir_pergunta() -> bool
         }
 
     class TentativaService {

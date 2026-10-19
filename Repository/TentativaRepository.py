@@ -1,28 +1,29 @@
 from abc import ABC, abstractmethod
-from Entidades.relatorio import Relatorio
-from pathlib import Path
+from Entidades.tentativa import Tentativa
 import sqlite3
 
 class TentativaRepository(ABC):
 
     @abstractmethod
-    def criar_tabela(self):
+    def deletar(self, tentativa_id: str):   
         pass
 
     @abstractmethod
-    def deletar(self, relatorio_id: str):   
+    def buscar_por_id(self, tentativa_id: str) -> Tentativa:
         pass
 
     @abstractmethod
-    def buscar_por_id(self, realtorio_id: str) -> Relatorio:
+    def salvar(self, tentativa: Tentativa):
         pass
 
     @abstractmethod
-    def salvar(self, relatorio: Relatorio):
+    def listar_todos(self) -> list[Tentativa]:
         pass
 
     @abstractmethod
-    def listar_todos(self) -> list[Relatorio]:
+    def buscar_por_usuario(self, usuario_id: str) -> list[Tentativa]:
         pass
-
     
+    @abstractmethod
+    def buscar_por_usuario_e_quiz(self, usuario_id: str , quiz_id: str) -> list[Tentativa]:
+        pass
