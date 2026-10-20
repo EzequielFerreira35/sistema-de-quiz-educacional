@@ -1,19 +1,21 @@
 import uuid
 
+
+
 class Tema:
     """
     Essa classe representa o assunto ao qual uma pergunta pertence.
     
     Atributos:
         - id (str): Número de identificação do Tema
-        - nome (str): Número de identificação do Nome
+        - nome (str): Nome do Tema
     """
     def __init__(self, nome: str, 
                 id: str | None = None
     ) -> None:
     
         self.__id = id if id is not None else str(uuid.uuid4())
-        self.__nome = nome
+        self.nome = nome
 
     @property
     def id(self) -> str:
@@ -25,12 +27,22 @@ class Tema:
 
     @nome.setter
     def nome(self, valor: str) -> None: 
-        if not valor.strip():
-            raise ValueError("O nome do tema não pode ser vazio!")
         if not isinstance(valor, str):
             raise ValueError("O nome do tema deve ser do tipo string!")
-
+        
+        if not valor.strip():
+            raise ValueError("O nome do tema não pode ser vazio!")
+        
         self.__nome = valor
+
+    def __str__(self) -> str:
+        return f"Tema: {self.nome}"
+
+    def __eq__(self, value: object) -> bool:
+        if not isinstance(value ,Tema):
+            return NotImplemented
+
+        return self.id == value.id
 
     @classmethod
     def from_row(cls, linha):

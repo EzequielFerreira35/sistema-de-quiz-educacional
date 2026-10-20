@@ -2,7 +2,6 @@ import uuid
 from .tema import Tema
 
 class Pergunta:
-    PESO_PROVISORIO = {"facil": 1, "medio": 2, "dificil": 3} # Variavel provisória que será removida depois de criar as settings
     """
     Essa classe representa uma pergunta de múltipla escolha.
 
@@ -14,6 +13,9 @@ class Pergunta:
         - indice_respota (int): Indice que representa qual alternativa é a correta
         - dificuldade (str): Dificuldade da Pergunta
     """
+    PESO_PROVISORIO = {"facil": 1, "medio": 2, "dificil": 3} # Variavel provisória que será removida depois de criar as settings
+    MIN = 3
+    MAX = 5
 
     def __init__(self,
                 tema: Tema,
@@ -28,8 +30,20 @@ class Pergunta:
         self.tema = tema
         self.enunciado = enunciado
         self.alternativas = alternativas
-        self.__indice_resposta = indice_resposta
+        self.indice_resposta = indice_resposta
         self.dificuldade = dificuldade
+
+    def __str__(self) -> str:
+        return f"{self.enunciado} (Dificuldade: {self.dificuldade})"
+
+    def __eq__(self, value: object) -> bool:
+        if not isinstance(value, Pergunta):
+            return NotImplemented
+
+        return (
+            self.enunciado.strip().casefold() == value.enunciado.strip().casefold()
+            and self.tema == value.tema
+        )
 
     @property
     def id(self) -> str:
@@ -50,12 +64,12 @@ class Pergunta:
         return self.__enunciado
     
     @enunciado.setter
-    def enunciado(self, valor: str):
-        if not valor.strip():
-            raise ValueError("O enunciado não pode ser vazio!")
-        
+    def enunciado(self, valor: str):      
         if not isinstance(valor, str):
             raise ValueError("O enunciado deve ser do tipo string!")
+        
+        if not valor.strip():
+            raise ValueError("O enunciado não pode ser vazio!")
 
         self.__enunciado = valor
 
@@ -65,13 +79,23 @@ class Pergunta:
 
     @alternativas.setter
     def alternativas(self, valor: list) -> None:
-        lista_copia = list(valor)
+        if not isinstance(valor, list):
+            raise ValueError("As alternativas devem ser uma lista!")
+
+        if not all(isinstance(alt, str) for alt in valor):
+            raise ValueError("Todas as alternativas devem ser string")
+
+        lista_copia = [str(alt).strip() for alt in valor]
+
+        if "" in lista_copia:
+            raise ValueError("A lista não pode conter alternativas vazias!")
 
         if not self.verificar_qtd_resposta(lista_copia):
-            raise ValueError("A pergunta deve ter entre 2 a 5 alternativas!")
+            raise ValueError(f"A pergunta deve ter entre {self.MIN} a {self.MAX} alternativas!")
         
         if self.verificar_duplicata(lista_copia):
             raise ValueError("Não pode ter alternativas duplicadas!")
+
         self.__alternativas = lista_copia
 
     
@@ -81,7 +105,7 @@ class Pergunta:
 
     @indice_resposta.setter
     def indice_resposta(self, valor: int) -> None:
-        if not isinstance(valor, int):
+        if not isinstance(valor, int) or isinstance(valor, bool):
             raise ValueError("Indice da resposta deve ser do tipo int!")
         
         if not 0 <= valor < len(self.alternativas):
@@ -113,10 +137,10 @@ class Pergunta:
         padrao = [str(x).strip().lower() for x in alternativas]
         return len(padrao) != len(set(padrao))
 
-    @staticmethod
-    def verificar_qtd_resposta(alternativas: list[str]) -> bool:
+    @classmethod
+    def verificar_qtd_resposta(cls, alternativas: list[str]) -> bool:
         tamanho = len(alternativas)
-        return 3 <= tamanho <= 5 # Provisorio(enquanto ainda não tem as settings)
+        return cls.MIN <= tamanho <= cls.MAX # Provisorio(enquanto ainda não tem as settings)
     
     def peso(self) -> int:
         return self.PESO_PROVISORIO[self.__dificuldade]
