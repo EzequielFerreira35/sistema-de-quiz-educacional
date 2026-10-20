@@ -145,6 +145,4 @@ class Pergunta:
     def peso(self) -> int:
         return self.PESO_PROVISORIO[self.__dificuldade]
 
-    @classmethod
-    def from_row(cls, linha):
-        ...
+
