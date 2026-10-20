@@ -29,7 +29,7 @@ class InicializarDataBase:
 
             conn.execute("""CREATE TABLE IF NOT EXISTS tema(
             id TEXT PRIMARY KEY,
-            nome TEXT NOT NULL)""")
+            nome TEXT UNIQUE NOT NULL)""")
 
             conn.execute("""CREATE TABLE IF NOT EXISTS tentativa(
             id TEXT PRIMARY KEY,

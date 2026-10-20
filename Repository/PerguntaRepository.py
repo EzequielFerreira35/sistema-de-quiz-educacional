@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from Entidades.pergunta import Pergunta
+from contextlib import closing
 import sqlite3
 
 class PerguntaRepository(ABC):

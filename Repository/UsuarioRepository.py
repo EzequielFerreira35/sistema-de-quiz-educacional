@@ -11,7 +11,7 @@ class UsuarioRepository(ABC):
         pass
 
     @abstractmethod
-    def buscar_por_id(self, usuario_id: str) -> Usuario:
+    def buscar_por_id(self, usuario_id: str) -> Usuario | None:
         pass
 
     @abstractmethod
@@ -19,11 +19,11 @@ class UsuarioRepository(ABC):
         pass
 
     @abstractmethod
-    def listar_todos(self) -> list[Usuario]:
+    def listar_todos(self) -> list[Usuario] | None:
         pass
 
     @abstractmethod
-    def buscar_por_email(self, email: str) -> Usuario:
+    def buscar_por_email(self, email: str) -> Usuario | None:
         pass
 
 class UsuarioRepositorySQLite(UsuarioRepository):
@@ -32,46 +32,53 @@ class UsuarioRepositorySQLite(UsuarioRepository):
 
     def conectar(self):
         conn = sqlite3.connect(self.caminho)
+        conn.execute("PRAGMA foreign_keys = ON")
         conn.row_factory = sqlite3.Row
         return conn
 
     def deletar(self, usuario_id: str):
-        with self.conectar() as conn:
-            conn.execute("DELETE FROM usuario WHERE id = ?", (usuario_id))
+        with closing(self.conectar()) as conn:
+            conn.execute("DELETE FROM usuario WHERE id = ?", (usuario_id,))
 
-        conn.commit()
-        conn.close()
+            conn.commit()
 
-    def buscar_por_id(self, usuario_id: str) -> Usuario:
-        with self.conectar() as conn:
+    def buscar_por_id(self, usuario_id: str) -> Usuario | None:
+        with closing(self.conectar()) as conn:
             cursor = conn.execute("SELECT * FROM usuario WHERE id = ?", (usuario_id,))
             usuario = cursor.fetchone()
 
-        conn.close() 
-        return Usuario(id=usuario[0], nome=usuario[1], email=usuario[2], senha=usuario[3])
+        if usuario is None:
+            return
+
+        return Usuario.from_row(usuario)
         
     def salvar(self, usuario: Usuario) -> None:
-        with self.conectar() as conn:
+        with closing(self.conectar()) as conn:
             conn.execute("""INSERT INTO usuario (id, username, email, senha)
                             VALUES (?, ?, ?, ?)""", 
                             (usuario.id, usuario.username, usuario.email, usuario. senha))
 
-        conn.commit()
-        conn.close
+            conn.commit()
 
-    def listar_todos(self) -> list[Usuario]:
+    def listar_todos(self) -> list[Usuario] | None:
         with closing(self.conectar()) as conn:
             cursor = conn.execute("SELECT * FROM usuario ORDER BY username")
 
             dados = cursor.fetchall()
+
+            if dados is None:
+                return 
+            
             usuario = [Usuario.from_row(linha) for linha in dados]
 
         return usuario
 
-    def buscar_por_email(self, email: str) -> Usuario:
-        with self.conectar() as conn:
+    def buscar_por_email(self, email: str) -> Usuario | None:
+        with closing(self.conectar()) as conn:
             cursor = conn.execute("SELECT * FROM usuario WHERE email = ?", (email,))
             usuario = cursor.fetchone()
 
-        conn.close()
-        return Usuario(usuario[0], usuario[1], usuario[2], usuario[3])
+        if usuario is None:
+            return
+        
+        return Usuario.from_row(usuario)

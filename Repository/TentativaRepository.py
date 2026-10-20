@@ -1,7 +1,10 @@
 from abc import ABC, abstractmethod
-from Entidades.tentativa import Tentativa, Usuario
+from Entidades.tentativa import Tentativa
+from Entidades.usuario import Usuario
+from Entidades.quiz import Quiz
+from contextlib import closing
 from pathlib import Path
-import uuid
+
 import sqlite3
 
 class TentativaRepository(ABC):
@@ -19,7 +22,11 @@ class TentativaRepository(ABC):
         pass
 
     @abstractmethod
-    def listar_por_usuario(self, usuario_id: str, quiz_id: str) -> list:
+    def listar_por_usuario(self, usuario_id: str, quiz_id: str) -> list | None:
+        pass
+
+    @abstractmethod
+    def contar_por_usuario_e_quiz(self, usuario_id: str, quiz_id: str) -> int:
         pass
 
 class TentativaRepositorySQLite(TentativaRepository):
@@ -28,34 +35,37 @@ class TentativaRepositorySQLite(TentativaRepository):
 
     def conectar(self):
         conn = sqlite3.connect(self.caminho)
+        conn.execute("PRAGMA foreign_keys = ON")
         conn.row_factory = sqlite3.Row
         return conn
 
     def salvar(self, tentativa: Tentativa):
-        with self.conectar() as conn:
-            conn.execute("""INSERT INTO tentativa (id, id_quiz, id_usuario, pontuacao, tempo_total, status_conclusao)
-                            VALUES (?, ?, ?, ?, ?, ?)""", 
-                            (tentativa.id, tentativa.quiz.id, tentativa.usuario.id, tentativa.pontuacao, tentativa.tempo_total, tentativa.status_conclusao))
-        
-        perguntas = tentativa.quiz.lista_perguntas
+        with closing(self.conectar()) as conn:
+            conn.execute("""INSERT INTO tentativa (id, id_quiz, id_usuario, data, pontuacao, tempo_total, status_conclusao)
+                            VALUES (?, ?, ?, ?, ?, ?, ?)""", 
+                            (tentativa.id, tentativa.quiz.id, tentativa.usuario.id, tentativa.data, tentativa.pontuacao, tentativa.tempo_total, tentativa.status_conclusao))
 
-        for pergunta, resposta in zip(perguntas, tentativa.respostas):
-            conn.execute("""INSERT INTO respostas_tentativa (id, id_tentativa, id_pergunta, id_alternativa)
-                            VALUES (?, ?, ?, ?)""",
-                            (str(uuid.uuid4()), tentativa.id, pergunta.id, resposta))
+            perguntas = tentativa.quiz.lista_perguntas
 
-        conn.commit()
-        conn.close()
+            for pergunta, resposta in zip(perguntas, tentativa.respostas):
+                id_alternativa = None
+                if resposta is not None:
+                    with conn:
+                        alternativa = conn.execute("""SELECT id from alternativa WHERE id_pergunta = ?""", (pergunta.id, resposta)).fetchone
+
+                    if alternativa is None:
+                        raise ValueError("Alternativa não encontrada")
+
+                    id_alternativa = alternativa["id"]
+
+            conn.commit()
 
     def deletar(self, tentativa_id: str):
-        with self.conectar() as conn:
-            conn.execute("""DELETE FROM respostas_tentativa WHERE id_tentativa = ?""", (tentativa_id))
-            conn.execute("""DELETE FROM tentativa WHERE id = ?""", (tentativa_id))
+        with closing(self.conectar()) as conn:
+            conn.execute("""DELETE FROM respostas_tentativa WHERE id_tentativa = ?""", (tentativa_id,))
+            conn.commit()
 
-        conn.commit()
-        conn.close()
-
-    def listar_por_usuario(self, usuario_id: str, quiz_id: str) -> list:
+    def listar_por_usuario(self, usuario_id: str, quiz_id: str) -> list | None:
         with self.conectar() as conn:
             cursor = conn.execute("""SELECT * FROM tentativa 
                                     JOIN usuario ON tentativa.id_usuario = usuario.id
@@ -67,7 +77,8 @@ class TentativaRepositorySQLite(TentativaRepository):
 
             dados = cursor.fetchall()
 
-        conn.close()
+        if dados is None:
+            return
+        
         return dados
 
-        

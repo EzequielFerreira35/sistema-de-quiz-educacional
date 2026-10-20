@@ -73,10 +73,10 @@ class Quiz:
     @classmethod
     def from_row(cls, linha):
         quiz = cls(
-            id = linha[0],
-            titulo = linha[1],
-            tempo_limite = linha[2],
-            limite_tentativas = linha[3]
+            id = linha["id"],
+            titulo = linha["titulo"],
+            tempo_limite = linha["tempo_limite"],
+            limite_tentativas = linha["limite_tentativas"]
         )
 
         return quiz

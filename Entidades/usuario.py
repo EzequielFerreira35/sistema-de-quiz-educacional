@@ -101,10 +101,10 @@ class Usuario:
     @classmethod
     def from_row(cls, linha):
         usuario = cls(
-            id=linha[0], 
-            nome=linha[1], 
-            email=linha[2], 
-            senha=linha[3]
+            id=linha["id"], 
+            nome=linha["nome"], 
+            email=linha["email"], 
+            senha=linha["senha"]
         )
         
         return usuario

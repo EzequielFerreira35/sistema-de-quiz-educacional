@@ -47,7 +47,7 @@ class Tema:
     @classmethod
     def from_row(cls, linha):
         tema = cls(
-            id = linha[0],
-            nome = linha[1] 
+            nome = linha["nome"],
+            id = linha["id"] 
         )
         return tema

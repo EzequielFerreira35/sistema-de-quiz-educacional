@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import uuid
+import datetime
 
 if TYPE_CHECKING:
     from .usuario import Usuario
@@ -24,6 +25,7 @@ class Tentativa:
                 quiz: Quiz,
                 respostas: list,
                 usuario: Usuario,
+                data,
                 tempo_total: int = 0,
                 id: str | None = None,
                 pontuacao: float = 0.0,
@@ -33,6 +35,7 @@ class Tentativa:
         self.__id = id if id is not None else str(uuid.uuid4())
         self.__usuario = usuario
         self.__quiz = quiz
+        self.data = data
         self.respostas = respostas if respostas is not None else []
         self.__pontuacao = pontuacao
         self.tempo_total = tempo_total
@@ -101,3 +104,4 @@ class Tentativa:
                 acertos += 1
 
         return acertos / len(p)
+

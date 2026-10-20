@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from Entidades.quiz import Quiz
+from contextlib import closing
 import sqlite3
 
 class QuizRepository(ABC):
@@ -9,7 +10,7 @@ class QuizRepository(ABC):
         pass
 
     @abstractmethod
-    def buscar_por_id(self, quiz_id: str) -> Quiz:
+    def buscar_por_id(self, quiz_id: str) -> Quiz | None:
         pass
 
     @abstractmethod
@@ -17,7 +18,7 @@ class QuizRepository(ABC):
         pass
 
     @abstractmethod
-    def listar_todos(self) -> list[Quiz]:
+    def listar_todos(self) -> list[Quiz] | None:
         pass
 
 
@@ -27,36 +28,41 @@ class QuizRepositorySQLite(QuizRepository):
 
     def conectar(self):
         conn = sqlite3.connect(self.caminho)
+        conn.execute("PRAGMA foreign_keys = ON")
         conn.row_factory = sqlite3.Row
         return conn
 
     def deletar(self, quiz_id: str):
-        with self.conectar() as conn:
-            cursor = conn.execute("DELETE FROM quiz WHERE id = ?", (quiz_id))
+        with closing(self.conectar()) as conn:
+            conn.execute("DELETE FROM quiz WHERE id = ?", (quiz_id,))
+            conn.commit()
 
-        conn.commit()
-        conn.close()
-
-    def buscar_por_id(self, quiz_id: str) -> Quiz:
-        with self.conectar() as conn:
-            cursor = conn.execute("SELECT * FROM quiz WHERE id = ?", quiz_id)
+    def buscar_por_id(self, quiz_id: str) -> Quiz | None:
+        with closing(self.conectar()) as conn:
+            cursor = conn.execute("SELECT * FROM quiz WHERE id = ?", (quiz_id,))
             quiz = cursor.fetchone()
 
-        conn.close()    
-        return Quiz(id=quiz[0], titulo=quiz[1], tempo_limite=quiz[2], limite_tentativas=quiz[3])
+        if quiz is None:
+            return
+
+        return Quiz.from_row(quiz)
 
     def salvar(self, quiz: Quiz) -> None:
-        with self.conectar() as conn:
+        with closing(self.conectar()) as conn:
             conn.execute("""INSERT INTO quiz (id, titulo, tempo_limite, limite_tentativas)
                             VALUES (?, ?, ?, ?)""", 
                             (quiz.id, quiz.titulo, quiz.tempo_limite, quiz. limite_tentativas))
+            perguntas = quiz.lista_perguntas
+
+            for pergunta in perguntas:
+                conn.execute("""INSERT INTO quiz_pergunta (id_quiz, id_pergunta)
+                                VALUES (?, ?)""", (quiz.id, pergunta.id))
 
         conn.commit()
-        conn.close
 
-    def listar_todos(self) -> list[Quiz]:
-        with self.conectar() as conn:
+    def listar_todos(self) -> list[Quiz] | None:
+        with closing(self.conectar()) as conn:
             cursor = conn.execute("SELECT * FROM quiz ORDER BY titulo")
+            quizzes = cursor.fetchall()
 
-        conn.close()
-        return [Quiz.from_row(linha) for linha in cursor.fetchall()]
+        return [Quiz.from_row(linha) for linha in quizzes]
