@@ -34,8 +34,9 @@ class InicizalizarDataBase:
             id TEXT PRIMARY KEY,
             id_quiz TEXT NOT NULL,
             id_usuario TEXT NOT NULL,
-            pontuacao INTEGER NOT NULL,
+            pontuacao REAL NOT NULL,
             tempo_total INTEGER NOT NULL,
+            status_conclusao INTEGER NOT NULL,
             
             FOREIGN KEY (id_quiz) REFERENCES quiz(id),
             FOREIGN KEY (id_usuario) REFERENCES usuario(id))""")
@@ -59,6 +60,9 @@ class InicizalizarDataBase:
             conn.execute("""CREATE TABLE IF NOT EXISTS respostas_tentativa(
             id TEXT PRIMARY KEY,
             id_tentativa TEXT NOT NULL,
+            id_pergunta TEXT NOT NULL,
+            id_alternativa TEXT NOT NULL,
             
-            FOREIGN KEY (id_tentativa) REFERENCES tentativa(id))""")
+            FOREIGN KEY (id_tentativa) REFERENCES tentativa(id),
+            FOREIGN KEY (id_pergunta) REFERENCES pergunta(id))""")
         conn.close()

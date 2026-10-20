@@ -21,5 +21,9 @@ class PerguntaRepository(ABC):
         pass
 
     @abstractmethod
-    def listar_por_tema(self, dificuldade = None, quantidade = None) -> list[Pergunta]:
+    def listar_por_tema(self) -> list[Pergunta]:
+        pass
+
+    @abstractmethod
+    def listar_por_quiz(self) -> list[Pergunta]:
         pass

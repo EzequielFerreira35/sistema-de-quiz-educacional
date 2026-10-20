@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from Entidades.usuario import Usuario
 from pathlib import Path
+from contextlib import closing
 import sqlite3
 
 class UsuarioRepository(ABC):
@@ -36,22 +37,22 @@ class UsuarioRepositorySQLite(UsuarioRepository):
 
     def deletar(self, usuario_id: str):
         with self.conectar() as conn:
-            cursor = conn.execute("DELETE FROM usuario WHERE id = ?", (usuario_id))
+            conn.execute("DELETE FROM usuario WHERE id = ?", (usuario_id))
 
         conn.commit()
         conn.close()
 
     def buscar_por_id(self, usuario_id: str) -> Usuario:
         with self.conectar() as conn:
-            cursor = conn.execute("SELECT * FROM usuario WHERE id = ?", usuario_id)
+            cursor = conn.execute("SELECT * FROM usuario WHERE id = ?", (usuario_id,))
             usuario = cursor.fetchone()
 
-        conn.close()    
-        return Usuario(usuario[0], usuario[1], usuario[2], usuario[3])
+        conn.close() 
+        return Usuario(id=usuario[0], nome=usuario[1], email=usuario[2], senha=usuario[3])
         
     def salvar(self, usuario: Usuario) -> None:
         with self.conectar() as conn:
-            conn.execute("""INSERT INTO usuario (id, nome, email, senha)
+            conn.execute("""INSERT INTO usuario (id, username, email, senha)
                             VALUES (?, ?, ?, ?)""", 
                             (usuario.id, usuario.username, usuario.email, usuario. senha))
 
@@ -59,15 +60,17 @@ class UsuarioRepositorySQLite(UsuarioRepository):
         conn.close
 
     def listar_todos(self) -> list[Usuario]:
-        with self.conectar() as conn:
-            cursor = conn.execute("SELECT * FROM usuario ORDER BY nome")
+        with closing(self.conectar()) as conn:
+            cursor = conn.execute("SELECT * FROM usuario ORDER BY username")
 
-        conn.close()
-        return [Usuario.from_row(linha) for linha in cursor.fetchall()]
+            dados = cursor.fetchall()
+            usuario = [Usuario.from_row(linha) for linha in dados]
+
+        return usuario
 
     def buscar_por_email(self, email: str) -> Usuario:
         with self.conectar() as conn:
-            cursor = conn.execute("SELECT * FROM usuario WHERE email = ?", email)
+            cursor = conn.execute("SELECT * FROM usuario WHERE email = ?", (email,))
             usuario = cursor.fetchone()
 
         conn.close()

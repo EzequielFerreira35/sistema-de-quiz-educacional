@@ -1,5 +1,11 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 import uuid
-from .quiz import Quiz
+
+if TYPE_CHECKING:
+    from .usuario import Usuario
+    from .quiz import Quiz
 
 class Tentativa:
     """
@@ -17,16 +23,20 @@ class Tentativa:
     def __init__(self,
                 quiz: Quiz,
                 respostas: list,
-                tempo_total: int,
-                id: str | None = None  
+                usuario: Usuario,
+                tempo_total: int = 0,
+                id: str | None = None,
+                pontuacao: float = 0.0,
+                status_conclusao: bool = False
     ) -> None:
         
         self.__id = id if id is not None else str(uuid.uuid4())
+        self.__usuario = usuario
         self.__quiz = quiz
-        self.respostas = respostas
-        self.__pontuacao = 0.0
+        self.respostas = respostas if respostas is not None else []
+        self.__pontuacao = pontuacao
         self.tempo_total = tempo_total
-        self.__status_conclusao = False
+        self.__status_conclusao = status_conclusao
 
     @property
     def id(self) -> str:
@@ -35,6 +45,10 @@ class Tentativa:
     @property
     def quiz(self) -> Quiz:
         return self.__quiz
+
+    @property
+    def usuario(self) -> Usuario:
+        return self.__usuario
 
     @property
     def respostas(self) -> list:
@@ -63,7 +77,7 @@ class Tentativa:
         self.__tempo_total = valor
 
     @property
-    def status_conclusao(self) -> bool:
+    def status_conclusao(self) -> bool | None:
         return self.__status_conclusao
     
     def calcular_pontuacao(self) -> float:

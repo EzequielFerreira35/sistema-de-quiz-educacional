@@ -14,15 +14,17 @@ class Quiz:
         - limite_tentativas (int): Limite de Tentativas do Quiz
         - lista_perguntas (list): Lista de perguntas do Quiz
     """
-    def __init__(self, titulo: str, id = None, 
+    def __init__(self, 
+                titulo: str,
+                id = None, 
                 tempo_limite: int | None = None, 
-                limite_tentativa: int | None = None
+                limite_tentativas: int | None = None
     ) -> None:
 
         self.__id = id if id is not None else str(uuid.uuid4())
         self.titulo = titulo
         self.__tempo_limite = tempo_limite if tempo_limite is not None else self.TEMPO_LIMITE_PROVISORIO
-        self.__limite_tentativas = limite_tentativa if  limite_tentativa is not None else self.LIMITE_TENTATIVAS
+        self.__limite_tentativas = limite_tentativas if  limite_tentativas is not None else self.LIMITE_TENTATIVAS
         self.__lista_perguntas = []
 
     @property
@@ -67,3 +69,14 @@ class Quiz:
     
     def calcular_pontuacao_maxima(self) -> float:
         return float(sum(p.peso() for p in self.__lista_perguntas))
+
+    @classmethod
+    def from_row(cls, linha):
+        quiz = cls(
+            id = linha[0],
+            titulo = linha[1],
+            tempo_limite = linha[2],
+            limite_tentativas = linha[3]
+        )
+
+        return quiz

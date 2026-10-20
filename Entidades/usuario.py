@@ -1,6 +1,12 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 import uuid
 import re
-from .tentativa import Tentativa
+
+
+if TYPE_CHECKING:
+    from .tentativa import Tentativa
 
 class Usuario:
     """
