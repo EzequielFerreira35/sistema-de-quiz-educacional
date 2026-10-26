@@ -1,10 +1,12 @@
 import sqlite3
 from pathlib import Path
 from contextlib import closing
+from .sqlite_base import SQLiteBase
 
-class InicializarDataBase:
-    def __init__(self, db_path: str) -> None:
-        self.caminho = Path(db_path)
+class InicializarDataBase(SQLiteBase):
+    def __init__(self, caminho_db) -> None:
+        super().__init__(caminho_db)
+        self.caminho.parent.mkdir(parents=True, exist_ok=True)
         self.inicializar()
 
     def conectar(self):

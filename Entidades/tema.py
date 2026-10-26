@@ -17,6 +17,9 @@ class Tema:
         self.__id = id if id is not None else str(uuid.uuid4())
         self.nome = nome
 
+    def __hash__(self) -> int:
+        return hash(self.id)
+
     @property
     def id(self) -> str:
         return self.__id

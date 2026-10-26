@@ -46,7 +46,7 @@ class Usuario:
     @username.setter
     def username(self, valor: str):
         if not valor.strip() or not isinstance(valor, str):
-            raise ValueError("Nome deve ser do tipo string!")
+            raise ValueError("Nome deve ser do tipo string não vazio!")
         self.__username = valor.strip()
     
     @property
@@ -56,7 +56,9 @@ class Usuario:
     @email.setter
     def email(self, valor: str):
         if not valor.strip() or not isinstance(valor, str):
-            raise ValueError("Email deve ser do tipo string!")
+            raise ValueError("Email deve ser do tipo string não vazio!")
+
+        valor =  valor.strip()
         
         padrao = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-zA-Z]{2,}$"
 
@@ -72,7 +74,8 @@ class Usuario:
     @senha.setter
     def senha(self, valor: str):
         if not valor.strip() or not isinstance(valor, str):
-            raise ValueError("Senha deve ser do tipo string!")
+            raise ValueError("Senha deve ser do tipo string não vazio!")
+        
         if len(valor) < 8:
             raise ValueError("A senha deve conter pelomenos 8 caracteres!")
 

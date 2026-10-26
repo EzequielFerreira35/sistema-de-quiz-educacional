@@ -61,7 +61,18 @@ class Tentativa:
     def respostas(self, valor: list[int]):
         if not isinstance(valor, list):
             raise ValueError("Respostas deve ser uma lista de índices!")
+        perguntas = self.__quiz.lista_perguntas
 
+        if len(valor) > len(self.respostas):
+            raise ValueError("Há mais respostas do que perguntas")
+
+        for resposta, pergunta in zip(valor, perguntas):
+            if resposta is None:
+                continue
+
+            if isinstance(resposta, bool) or not isinstance(resposta, int) or not 0 < resposta <= len(pergunta.alternativas):
+                raise ValueError("Resposta inválida")
+            
         self.__respostas = list(valor)
 
     @property
@@ -91,9 +102,13 @@ class Tentativa:
             if resposta is not None and pergunta.verificar_resposta(resposta):
                 total += pergunta.peso()
 
-        self.__pontuacao = total
-        self.__status_conclusao = len(self.respostas) == len(p)
-        return total
+        self.__pontuacao = float(total)
+        return self.__pontuacao
+
+    def concluir(self) -> float:
+        self.pontuacao = self.calcular_pontuacao() # type: ignore
+        self.__status_conclusao = True
+        return self.pontuacao
 
     def taxa_acertos(self) -> float:
         p = self.__quiz.lista_perguntas

@@ -45,6 +45,9 @@ class Pergunta:
             and self.tema == value.tema
         )
 
+    def __hash__(self) -> int:
+        return hash((self.enunciado.strip().casefold(), self.tema))
+
     @property
     def id(self) -> str:
         return self.__id

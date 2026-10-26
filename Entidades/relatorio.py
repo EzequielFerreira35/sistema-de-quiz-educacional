@@ -31,7 +31,7 @@ class Relatorio:
     @nome.setter
     def nome(self, valor: str):
         if not valor.strip() or not isinstance(valor, str):
-            raise ValueError("Nome deve ser do tipo string!")
+            raise ValueError("Nome deve ser uma string não vazia!")
         self.__nome = valor.strip()
 
     @property

@@ -1,8 +1,7 @@
 import uuid
 from .pergunta import Pergunta
+
 class Quiz:
-    TEMPO_LIMITE_PROVISORIO = 1200 # provisorio
-    LIMITE_TENTATIVAS = 3 # provisorio
     """
     Essa classe representa um quiz  com um conjunto de perguntas com título, limite de tentativas, tempo limite(opcional) 
     e pontuação máxima calculada automaticamente.
@@ -14,6 +13,9 @@ class Quiz:
         - limite_tentativas (int): Limite de Tentativas do Quiz
         - lista_perguntas (list): Lista de perguntas do Quiz
     """
+    TEMPO_LIMITE_PROVISORIO = 1200 # provisorio
+    LIMITE_TENTATIVAS = 3 # provisorio
+
     def __init__(self, 
                 titulo: str,
                 id = None, 
@@ -23,10 +25,22 @@ class Quiz:
 
         self.__id = id if id is not None else str(uuid.uuid4())
         self.titulo = titulo
-        self.__tempo_limite = tempo_limite if tempo_limite is not None else self.TEMPO_LIMITE_PROVISORIO
-        self.__limite_tentativas = limite_tentativas if  limite_tentativas is not None else self.LIMITE_TENTATIVAS
+        self.tempo_limite = tempo_limite if tempo_limite is not None else self.TEMPO_LIMITE_PROVISORIO
+        self.limite_tentativas = limite_tentativas if  limite_tentativas is not None else self.LIMITE_TENTATIVAS
         self.__lista_perguntas = []
 
+    def __len__(self):
+        return len(self.__lista_perguntas)
+
+    def __iter__(self):
+        return iter(self.__lista_perguntas)
+    
+    @staticmethod
+    def _inteiro_positovo(valor, nome):
+        if isinstance(valor, bool) or not isinstance(valor, int) or valor <=0:
+            raise ValueError(f"{nome} deve ser um inteiro positivo")
+        return valor
+    
     @property
     def id(self) -> str:
         return self.__id
@@ -37,31 +51,36 @@ class Quiz:
 
     @titulo.setter
     def titulo(self, valor: str):
-        if not valor.strip():
-            raise ValueError("O Título não pode ser vazio!")
+        if not isinstance(valor, str) or not valor.strip():
+            raise ValueError("O Título deve ser uma string não vazia!")
         
-        if not isinstance(valor, str):
-            raise ValueError("O Título deve ser do tipo string!")
-        
-        self.__titulo = valor
+        self.__titulo = valor.strip()
 
     @property
     def tempo_limite(self) -> int:
         return self.__tempo_limite
 
+    @tempo_limite.setter
+    def tempo_limite(self, valor: int):
+        self.__tempo_limite = self._inteiro_positovo(valor, "tempo_limite")
+
     @property
     def limite_tentativas(self) -> int:
         return self.__limite_tentativas
+
+    @limite_tentativas.setter
+    def limite_tentativas(self, valor):
+        self.__limite_tentativas = self._inteiro_positovo(valor, "limite_tentativas")
 
     @property
     def lista_perguntas(self) -> list[Pergunta]:
         return self.__lista_perguntas
 
-    def adicionar_perguntas(self, pergunta: Pergunta) -> bool:
+    def adicionar_pergunta(self, pergunta: Pergunta) -> bool:
         if not isinstance(pergunta, Pergunta):
             raise TypeError("Só é possivel adicionar obejtos do tipo Pergunta!")
         
-        if any(p.id == pergunta.id for p in self.__lista_perguntas): # Verifica se a pergunta já existe na lista
+        if pergunta in self.__lista_perguntas:
             return False
 
         self.__lista_perguntas.append(pergunta)
