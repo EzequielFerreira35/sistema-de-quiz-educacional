@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from Entidades.quiz import Quiz
-from contextlib import closing
-import sqlite3
+from .sqlite_base import SQLiteBase
+
 
 class QuizRepository(ABC):
 
@@ -22,23 +22,16 @@ class QuizRepository(ABC):
         pass
 
 
-class QuizRepositorySQLite(QuizRepository):
+class QuizRepositorySQLite(QuizRepository, SQLiteBase):
     def __init__(self, caminho_db) -> None:
-        self.caminho = caminho_db
-
-    def conectar(self):
-        conn = sqlite3.connect(self.caminho)
-        conn.execute("PRAGMA foreign_keys = ON")
-        conn.row_factory = sqlite3.Row
-        return conn
+        super().__init__(caminho_db)
 
     def deletar(self, quiz_id: str):
-        with closing(self.conectar()) as conn:
+        with self.conexao() as conn:
             conn.execute("DELETE FROM quiz WHERE id = ?", (quiz_id,))
-            conn.commit()
 
     def buscar_por_id(self, quiz_id: str) -> Quiz | None:
-        with closing(self.conectar()) as conn:
+        with self.conexao() as conn:
             cursor = conn.execute("SELECT * FROM quiz WHERE id = ?", (quiz_id,))
             quiz = cursor.fetchone()
 
@@ -48,7 +41,7 @@ class QuizRepositorySQLite(QuizRepository):
         return Quiz.from_row(quiz)
 
     def salvar(self, quiz: Quiz) -> None:
-        with closing(self.conectar()) as conn:
+        with self.conexao() as conn:
             conn.execute("""INSERT INTO quiz (id, titulo, tempo_limite, limite_tentativas)
                             VALUES (?, ?, ?, ?)""", 
                             (quiz.id, quiz.titulo, quiz.tempo_limite, quiz. limite_tentativas))
@@ -58,10 +51,8 @@ class QuizRepositorySQLite(QuizRepository):
                 conn.execute("""INSERT INTO quiz_pergunta (id_quiz, id_pergunta)
                                 VALUES (?, ?)""", (quiz.id, pergunta.id))
 
-        conn.commit()
-
     def listar_todos(self) -> list[Quiz] | None:
-        with closing(self.conectar()) as conn:
+        with self.conexao() as conn:
             cursor = conn.execute("SELECT * FROM quiz ORDER BY titulo")
             quizzes = cursor.fetchall()
 

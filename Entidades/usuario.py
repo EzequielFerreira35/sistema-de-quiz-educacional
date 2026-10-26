@@ -105,7 +105,7 @@ class Usuario:
     def from_row(cls, linha):
         usuario = cls(
             id=linha["id"], 
-            nome=linha["nome"], 
+            nome=linha["username"], 
             email=linha["email"], 
             senha=linha["senha"]
         )

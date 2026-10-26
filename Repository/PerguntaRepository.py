@@ -1,9 +1,10 @@
+import uuid
+
 from abc import ABC, abstractmethod
 from Entidades.pergunta import Pergunta
-from Entidades.tema import Tema
-from contextlib import closing
-import sqlite3
-import uuid
+from .sqlite_base import SQLiteBase
+
+
 
 class PerguntaRepository(ABC):
 
@@ -31,23 +32,17 @@ class PerguntaRepository(ABC):
     def listar_por_quiz(self) -> list[Pergunta]:
         pass
 
-class PerguntaRepositorySQLite(PerguntaRepository):
+class PerguntaRepositorySQLite(PerguntaRepository, SQLiteBase):
     def __init__(self, caminho_db) -> None:
-        self.caminho = caminho_db
- 
-    def conectar(self):
-        conn = sqlite3.connect(self.caminho)
-        conn.execute("PRAGMA foreign_keys = ON")
-        conn.row_factory = sqlite3.Row
-        return conn
+        super().__init__(caminho_db)
 
     def deletar(self, pergunta_id: str):
-        with closing(self.conectar()) as conn:
+        with self.conexao() as conn:
             conn.execute("DELETE FROM pergunta WHERE id = ?", (pergunta_id,))
             conn.commit()
 
     def salvar(self, pergunta: Pergunta) -> None:
-        with closing(self.conectar()) as conn:
+        with self.conexao() as conn:
             conn.execute("""INSERT INTO pergunta (id, id_tema, enunciado, indice_resposta, dificuldade)
                             VALUES (?, ?, ?, ?, ?)""",
                             (pergunta.id, pergunta.tema.id, pergunta.enunciado, pergunta.indice_resposta, pergunta.dificuldade))
@@ -59,7 +54,7 @@ class PerguntaRepositorySQLite(PerguntaRepository):
             conn.commit()
 
     def buscar_por_id(self, pergunta_id: str) -> Pergunta | None:
-        with closing(self.conectar()) as conn:
+        with self.conexao() as conn:
             cursor = conn.execute("""SELECT pergunta.*, tema.nome AS nome_tema
                                      FROM pergunta JOIN tema ON pergunta.id_tema = tema.id
                                      WHERE pergunta.id = ?""", (pergunta_id,))
@@ -71,7 +66,7 @@ class PerguntaRepositorySQLite(PerguntaRepository):
             return pergunta
 
     def listar_todos(self) -> list[Pergunta]:
-        with closing(self.conectar()) as conn:
+        with self.conexao() as conn:
             cursor = conn.execute("""SELECT pergunta.*, tema.nome AS nome_tema
                                      FROM pergunta JOIN tema ON pergunta.id_tema = tema.id
                                      ORDER BY pergunta.enunciado""")
@@ -81,7 +76,7 @@ class PerguntaRepositorySQLite(PerguntaRepository):
 
 
     def listar_por_tema(self, tema_id: str) -> list[Pergunta]:
-        with closing(self.conectar()) as conn:
+        with self.conexao() as conn:
             cursor = conn.execute("""SELECT pergunta.*, tema.nome AS nome_tema
                                      FROM pergunta JOIN tema ON pergunta.id_tema = tema.id
                                      WHERE pergunta.id_tema = ?
@@ -91,7 +86,7 @@ class PerguntaRepositorySQLite(PerguntaRepository):
             return dados
  
     def listar_por_quiz(self, quiz_id: str) -> list[Pergunta]:
-        with closing(self.conectar()) as conn:
+        with self.conexao() as conn:
             cursor = conn.execute("""SELECT pergunta.*, tema.nome AS nome_tema
                                      FROM pergunta
                                      JOIN tema ON pergunta.id_tema = tema.id

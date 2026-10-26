@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from Entidades.tema import Tema
-from contextlib import closing
 from .sqlite_base import SQLiteBase
 
 class TemaRepository(ABC):
