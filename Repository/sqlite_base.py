@@ -6,9 +6,10 @@ class SQLiteBase:
     """Classe base dos repositórios SQLite.
     Responsável por abrir a conexão e fazer commit
     """
+    _CAMINHO_DB = Path(__file__).parent / "Database" / "SistemaData.db"
 
-    def __init__(self, caminho_db) -> None:
-        self.caminho = Path(caminho_db)
+    def __init__(self) -> None:
+        self.caminho = self._CAMINHO_DB
 
     @contextmanager
     def conexao(self):

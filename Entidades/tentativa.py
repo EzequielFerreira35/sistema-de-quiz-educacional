@@ -1,8 +1,10 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
+from datetime import datetime
 
+import unicodedata
 import uuid
-import datetime
+
 
 if TYPE_CHECKING:
     from .usuario import Usuario
@@ -25,7 +27,7 @@ class Tentativa:
                 quiz: Quiz,
                 respostas: list,
                 usuario: Usuario,
-                data,
+                data: str,
                 tempo_total: int = 0,
                 id: str | None = None,
                 pontuacao: float = 0.0,
@@ -35,7 +37,7 @@ class Tentativa:
         self.__id = id if id is not None else str(uuid.uuid4())
         self.__usuario = usuario
         self.__quiz = quiz
-        self.data = data
+        self.data = data if data is not None else str(datetime.now())
         self.respostas = respostas if respostas is not None else []
         self.__pontuacao = pontuacao
         self.tempo_total = tempo_total
@@ -54,6 +56,20 @@ class Tentativa:
         return self.__usuario
 
     @property
+    def data(self) -> str:
+        return self.__data
+
+    @data.setter
+    def data(self, valor: str):
+        formato_padrao = "%d/%m/%Y %H:%M:%S"
+        try:
+            datetime.strptime(valor, formato_padrao)
+        except:
+            raise ValueError("Data inválida")
+
+        self.__data = valor
+
+    @property
     def respostas(self) -> list:
         return self.__respostas
 
@@ -63,14 +79,14 @@ class Tentativa:
             raise ValueError("Respostas deve ser uma lista de índices!")
         perguntas = self.__quiz.lista_perguntas
 
-        if len(valor) > len(self.respostas):
+        if len(valor) > len(perguntas):
             raise ValueError("Há mais respostas do que perguntas")
 
         for resposta, pergunta in zip(valor, perguntas):
             if resposta is None:
                 continue
 
-            if isinstance(resposta, bool) or not isinstance(resposta, int) or not 0 < resposta <= len(pergunta.alternativas):
+            if isinstance(resposta, bool) or not isinstance(resposta, int) or not 0 <= resposta <= len(pergunta.alternativas):
                 raise ValueError("Resposta inválida")
             
         self.__respostas = list(valor)
@@ -106,14 +122,16 @@ class Tentativa:
         return self.__pontuacao
 
     def concluir(self) -> float:
-        self.pontuacao = self.calcular_pontuacao() # type: ignore
+        self.calcular_pontuacao() 
         self.__status_conclusao = True
-        return self.pontuacao
-
+        return self.__pontuacao
+    
     def taxa_acertos(self) -> float:
         p = self.__quiz.lista_perguntas
         acertos = 0
-
+        if not p:
+            return 0.0
+        
         for resposta, pergunta in zip(self.respostas, p):
             if resposta is not None and pergunta.verificar_resposta(resposta):
                 acertos += 1

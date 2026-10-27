@@ -22,8 +22,8 @@ class TemaRepository(ABC):
 
 
 class TemaRepositorySQLite(TemaRepository, SQLiteBase):
-    def __init__(self, caminho_db) -> None:
-        super().__init__(caminho_db)
+    def __init__(self) -> None:
+        super().__init__()
 
 
     def deletar(self, tema_id: str):
@@ -43,7 +43,8 @@ class TemaRepositorySQLite(TemaRepository, SQLiteBase):
     def salvar(self, tema: Tema):
         with self.conexao() as conn:
             conn.execute("""INSERT INTO tema (id, nome)
-                            VALUES (?, ?)""", (tema.id, tema.nome))
+                            VALUES (?, ?) ON CONFLICT (id) DO UPDATE SET
+                            nome = nome.excluded""", (tema.id, tema.nome))
 
     def listar_todos(self) -> list[Tema]:
         with self.conexao() as conn:

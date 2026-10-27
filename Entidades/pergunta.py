@@ -74,7 +74,7 @@ class Pergunta:
         if not valor.strip():
             raise ValueError("O enunciado não pode ser vazio!")
 
-        self.__enunciado = valor
+        self.__enunciado = valor.strip()
 
     @property
     def alternativas(self) -> list[str]:
@@ -148,4 +148,17 @@ class Pergunta:
     def peso(self) -> int:
         return self.PESO_PROVISORIO[self.__dificuldade]
 
+    @classmethod
+    def from_row(cls, linha):
+        pergunta = cls(
+            id = linha["id"],
+            tema = Tema(
+                nome=linha["nome_tema"],
+                id=linha["id"]),
+            enunciado = linha["enunciado"],
+            indice_resposta= linha["indice_resposta"],
+            dificuldade = linha["dificuldade"],
+            alternativas = linha["alternativas"]
+                       )
+        return pergunta
 

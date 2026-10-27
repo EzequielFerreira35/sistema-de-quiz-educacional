@@ -26,8 +26,8 @@ class UsuarioRepository(ABC):
         pass
 
 class UsuarioRepositorySQLite(UsuarioRepository, SQLiteBase):
-    def __init__(self, caminho_db) -> None:
-        super().__init__(caminho_db)
+    def __init__(self) -> None:
+        super().__init__()
 
     def deletar(self, usuario_id: str):
         with self.conexao() as conn:
@@ -46,7 +46,10 @@ class UsuarioRepositorySQLite(UsuarioRepository, SQLiteBase):
     def salvar(self, usuario: Usuario) -> None:
         with self.conexao() as conn:
             conn.execute("""INSERT INTO usuario (id, username, email, senha)
-                            VALUES (?, ?, ?, ?)""", 
+                            VALUES (?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET
+                            username = excluded.username,
+                            email = excluded.email,
+                            senha = excluded.senha""", 
                             (usuario.id, usuario.username, usuario.email, usuario. senha))
 
 

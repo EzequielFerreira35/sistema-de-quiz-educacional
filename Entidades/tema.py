@@ -36,7 +36,7 @@ class Tema:
         if not valor.strip():
             raise ValueError("O nome do tema não pode ser vazio!")
         
-        self.__nome = valor
+        self.__nome = valor.strip()
 
     def __str__(self) -> str:
         return f"Tema: {self.nome}"
