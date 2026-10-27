@@ -1,5 +1,6 @@
 import uuid
 from .pergunta import Pergunta
+from configmanager import ConfigManager
 
 class Quiz:
     """
@@ -13,8 +14,9 @@ class Quiz:
         - limite_tentativas (int): Limite de Tentativas do Quiz
         - lista_perguntas (list): Lista de perguntas do Quiz
     """
-    TEMPO_LIMITE_PROVISORIO = 1200 # provisorio
-    LIMITE_TENTATIVAS = 3 # provisorio
+    _CONFIG = ConfigManager()
+    TEMPO_LIMITE_PROVISORIO = _CONFIG.quiz_duracao
+    LIMITE_TENTATIVAS = _CONFIG.max_tentativas_por_quiz
 
     def __init__(self, 
                 titulo: str,

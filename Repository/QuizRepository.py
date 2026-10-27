@@ -43,7 +43,7 @@ class QuizRepositorySQLite(QuizRepository, SQLiteBase):
         q = Quiz.from_row(quiz) 
 
         repo = PerguntaRepositorySQLite()
-        perguntas = repo.listar_por_quiz(q.__id)
+        perguntas = repo.listar_por_quiz(q.id)
 
         for pergunta in perguntas:
             q.adicionar_pergunta(pergunta)

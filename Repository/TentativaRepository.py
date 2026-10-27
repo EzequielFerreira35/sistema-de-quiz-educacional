@@ -85,7 +85,9 @@ class TentativaRepositorySQLite(TentativaRepository, SQLiteBase):
                              tentativa.pontuacao, 
                              tentativa.tempo_total, 
                              tentativa.status_conclusao))
- 
+
+            conn.execute("""DELETE FROM respostas_tentativa WHERE id_tentativa = ?""", (tentativa, id))
+
             perguntas = tentativa.quiz.lista_perguntas
  
             for pergunta, resposta in zip(perguntas, tentativa.respostas):
