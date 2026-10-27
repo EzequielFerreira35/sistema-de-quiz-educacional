@@ -1,5 +1,6 @@
 import uuid
 from .tema import Tema
+from configmanager import ConfigManager
 
 class Pergunta:
     """
@@ -13,9 +14,9 @@ class Pergunta:
         - indice_respota (int): Indice que representa qual alternativa é a correta
         - dificuldade (str): Dificuldade da Pergunta
     """
-    PESO_PROVISORIO = {"facil": 1, "medio": 2, "dificil": 3} # Variavel provisória que será removida depois de criar as settings
-    MIN = 3
-    MAX = 5
+    PESO_PROVISORIO = ConfigManager.pergunta_peso 
+    MIN = ConfigManager.qtd_alternativas[0]
+    MAX = ConfigManager.qtd_alternativas[1]
 
     def __init__(self,
                 tema: Tema,
@@ -143,7 +144,7 @@ class Pergunta:
     @classmethod
     def verificar_qtd_resposta(cls, alternativas: list[str]) -> bool:
         tamanho = len(alternativas)
-        return cls.MIN <= tamanho <= cls.MAX # Provisorio(enquanto ainda não tem as settings)
+        return cls.MIN <= tamanho <= cls.MAX
     
     def peso(self) -> int:
         return self.PESO_PROVISORIO[self.__dificuldade]
