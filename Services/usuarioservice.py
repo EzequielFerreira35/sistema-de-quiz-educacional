@@ -53,7 +53,11 @@ class UsuarioService:
         if not isinstance(email, str) or not email.strip():
             raise ValueError("Email deve ser uma string não vazia!")
 
+        if not isinstance(usuario_id, str) or not usuario_id.strip():
+            raise ValueError("Usuario_id deve ser uma string não vazia!")  
+
         email = email.strip()
+        usuario_id = usuario_id.strip()
 
         usuario = self.repository.buscar_por_email(email)
         usuario_por_id = self.repository.buscar_por_id(usuario_id)

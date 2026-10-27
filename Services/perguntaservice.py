@@ -39,6 +39,8 @@ class PerguntaService:
         if not isinstance(pergunta_id, str) or not pergunta_id.strip():
             raise ValueError("O id da pergunta deve ser uma string não vazia!")
 
+        pergunta_id = pergunta_id.strip()
+
         pergunta = self.pergunta_repo.buscar_por_id(pergunta_id)
 
         if enunciado is not None:
@@ -46,7 +48,6 @@ class PerguntaService:
 
         if alternativas is not None:
             pergunta.alternativas = alternativas
-
         if indice_resposta is not None:
             pergunta.indice_resposta = indice_resposta
 
