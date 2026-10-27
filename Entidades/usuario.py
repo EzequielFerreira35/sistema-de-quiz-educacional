@@ -69,30 +69,11 @@ class Usuario:
 
     @property
     def senha(self) -> str:
-        return self.__senha
+        return self.__senha_hash
 
     @senha.setter
     def senha(self, valor: str):
-        if not valor.strip() or not isinstance(valor, str):
-            raise ValueError("Senha deve ser do tipo string não vazio!")
-        
-        if len(valor) < 8:
-            raise ValueError("A senha deve conter pelomenos 8 caracteres!")
-
-        if not re.search(r"[A-Z]", valor):
-            raise ValueError("A senha deve conter pelo menos uma letra maiúscula.")
-        
-        if not re.search(r"[a-z]", valor):
-            raise ValueError("A senha deve conter pelo menos uma letra minúscula.")
-        
-        if not re.search(r"[0-9]", valor):
-            raise ValueError("A senha deve conter pelo menos uma números.")
-        
-        if not re.search(r"[!@#$%¨&*]", valor):
-            raise ValueError("A senha deve conter pelo menos um caractere especial.")
-        
-        self.__senha = valor
-    
+        self.__senha_hash = valor
 
     @property
     def tentativas(self):

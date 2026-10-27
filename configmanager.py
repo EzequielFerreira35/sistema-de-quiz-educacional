@@ -2,6 +2,8 @@ import json
 from pathlib import Path
 
 class ConfigManager:
+    """Classe responsável com gerenciar o arquivo config.json"""
+    
     _CAMINHO_JSON = Path(__file__).parent / "config.json"
     def __init__(self):
         self.caminho = self._CAMINHO_JSON
@@ -44,4 +46,3 @@ class ConfigManager:
 
         with open(self.caminho, 'r', encoding='utf-8') as arquivo:
             json.dump(dados, arquivo, indent=4, ensure_ascii=False)
-    

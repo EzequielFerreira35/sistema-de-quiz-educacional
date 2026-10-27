@@ -88,7 +88,7 @@ classDiagram
 
     class UsuarioService {
         + cadastrar() -> Usuario
-        + atualizar_email() -> bool
+        + atualizar_email() -> Usuario
         }
 
     class PerguntaService {
