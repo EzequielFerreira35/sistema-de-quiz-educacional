@@ -1,0 +1,18 @@
+{
+    "quiz": {
+        "duracao": 20
+    },
+
+    "tentativa": {
+        "numero_max_tentativas_por_quiz": 5
+    },
+
+    "pergunta": {
+        "peso": {
+            "facil": 1,
+            "medio": 2,
+            "dificil": 3
+        },
+        "qtd_alternativas": [3, 5]
+    }
+}
