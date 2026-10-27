@@ -14,8 +14,7 @@ class QuizService:
         self.quiz_repo = quiz_repo
 
     def criar_quiz(self, titulo: str, tempo_limite=None, limite_tentativas=None):
-        quiz = Quiz(titulo, tempo_limite, limite_tentativas)
-
+        quiz = Quiz(titulo=titulo, tempo_limite=tempo_limite, limite_tentativas=limite_tentativas)
         self.quiz_repo.salvar(quiz)
         return quiz
 

@@ -29,7 +29,7 @@ class ConfigManager:
     @property
     def pergunta_peso(self) -> dict:
         dados = self._read()
-        return dados.get("pergunta", {})
+        return dados.get("pergunta", {}).get("peso")
 
     @property
     def qtd_alternativas(self) -> list:

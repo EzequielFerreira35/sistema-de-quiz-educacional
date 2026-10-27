@@ -44,7 +44,7 @@ class TemaRepositorySQLite(TemaRepository, SQLiteBase):
         with self.conexao() as conn:
             conn.execute("""INSERT INTO tema (id, nome)
                             VALUES (?, ?) ON CONFLICT (id) DO UPDATE SET
-                            nome = nome.excluded""", (tema.id, tema.nome))
+                            nome = excluded.nome""", (tema.id, tema.nome))
 
     def listar_todos(self) -> list[Tema]:
         with self.conexao() as conn:

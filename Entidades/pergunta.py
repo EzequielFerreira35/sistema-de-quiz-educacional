@@ -14,9 +14,10 @@ class Pergunta:
         - indice_respota (int): Indice que representa qual alternativa é a correta
         - dificuldade (str): Dificuldade da Pergunta
     """
-    PESO_PROVISORIO = ConfigManager.pergunta_peso 
-    MIN = ConfigManager.qtd_alternativas[0]
-    MAX = ConfigManager.qtd_alternativas[1]
+    _CONFIG = ConfigManager()
+    PESO_PROVISORIO = _CONFIG.pergunta_peso 
+    MIN = _CONFIG.qtd_alternativas[0]
+    MAX = _CONFIG.qtd_alternativas[1]
 
     def __init__(self,
                 tema: Tema,
@@ -129,6 +130,7 @@ class Pergunta:
         valor = valor.lower()
 
         if valor not in self.PESO_PROVISORIO:
+            print(valor, self.PESO_PROVISORIO)
             raise ValueError("A dificuldade deve ser uma das três opções: fácil, médio ou difícil")
         
         self.__dificuldade = valor

@@ -1,8 +1,8 @@
 from Repository.TentativaRepository import TentativaRepository,  Tentativa
 from Repository.QuizRepository import QuizRepository
 from Repository.UsuarioRepository import UsuarioRepository
-
 from configmanager import ConfigManager
+
 class TentativaService:
     """
     Gerencia as regras de negócio e o ciclo de vida das Tentativas.
@@ -92,6 +92,7 @@ class TentativaService:
             raise ValueError("Tentativa já concluida!")
         
         tentativa.tempo_total = tempo_total
+        tentativa.calcular_pontuacao()
         tentativa.concluir()
 
         self.tentativa_repo.salvar(tentativa)

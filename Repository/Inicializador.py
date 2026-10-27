@@ -1,22 +1,13 @@
 import sqlite3
-from pathlib import Path
-from contextlib import closing
 from .sqlite_base import SQLiteBase
 
 class InicializarDataBase(SQLiteBase):
-    def __init__(self, caminho_db) -> None:
-        super().__init__(caminho_db)
-        self.caminho.parent.mkdir(parents=True, exist_ok=True)
+    def __init__(self) -> None:
+        super().__init__()
         self.inicializar()
 
-    def conectar(self):
-        conn = sqlite3.connect(self.caminho)
-        conn.execute("PRAGMA foreign_keys = ON")
-        conn.row_factory = sqlite3.Row
-        return conn
-
     def inicializar(self):
-        with closing(self.conectar()) as conn:
+        with self.conexao() as conn:
             conn.execute("""CREATE TABLE IF NOT EXISTS usuario(
             id TEXT PRIMARY KEY,
             username TEXT NOT NULL,
@@ -85,4 +76,3 @@ class InicializarDataBase(SQLiteBase):
             
             FOREIGN KEY (id_quiz) REFERENCES quiz(id) ON DELETE CASCADE,
             FOREIGN KEY (id_pergunta) REFERENCES pergunta(id) ON DELETE CASCADE)""")
-            conn.commit()
