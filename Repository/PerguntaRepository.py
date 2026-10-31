@@ -52,10 +52,11 @@ class PerguntaRepositorySQLite(PerguntaRepository, SQLiteBase):
  
             for posicao, texto in enumerate(pergunta.alternativas):
                 conn.execute("""INSERT INTO alternativa (id, id_pergunta, enunciado, posicao)
-                                VALUES (?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET
-                                id_pergunta = excluded.id_pergunta,
-                                enunciado = excluded_enunciado,
+                                VALUES (?, ?, ?, ?) ON CONFLICT (id_pergunta, posicao) DO UPDATE SET
+                                enunciado = excluded.enunciado,
                                 posicao = excluded.posicao""", (str(uuid.uuid4()), pergunta.id, texto, posicao))
+
+            conn.execute("""DELETE FROM alternativa WHERE  id_pergunta = ? AND posicao >= ?""", (pergunta.id, len(pergunta.alternativas)))
  
     def buscar_por_id(self, pergunta_id: str) -> Pergunta | None:
         with self.conexao() as conn:
@@ -68,7 +69,7 @@ class PerguntaRepositorySQLite(PerguntaRepository, SQLiteBase):
             if pergunta is None:
                 return
             
-            cursor.execute("""SELECT * FROM alternativas WHERE pergunta_id = ? ORDER BY posicao""", (pergunta_id,))
+            cursor.execute("""SELECT * FROM alternativa WHERE id_pergunta = ? ORDER BY posicao""", (pergunta_id,))
 
             alternativas = cursor.fetchall()
 
@@ -87,7 +88,7 @@ class PerguntaRepositorySQLite(PerguntaRepository, SQLiteBase):
             resultado = []
 
             for pergunta in perguntas:
-                cursor.execute("""SELECT * FROM alternativas WHERE pergunta_id = ? ORDER BY posicao""", (pergunta["id"],))
+                cursor.execute("""SELECT * FROM alternativa WHERE id_pergunta = ? ORDER BY posicao""", (pergunta["id"],))
 
                 dados = dict(pergunta)
                 alternativas = cursor.fetchall()
@@ -109,7 +110,7 @@ class PerguntaRepositorySQLite(PerguntaRepository, SQLiteBase):
             resultado = []
 
             for pergunta in perguntas:
-                cursor.execute("""SELECT * FROM alternativas WHERE pergunta_id = ? ORDER BY posicao""", (pergunta["id"],))
+                cursor.execute("""SELECT * FROM alternativa WHERE id_pergunta = ? ORDER BY posicao""", (pergunta["id"],))
 
                 dados = dict(pergunta)
                 alternativas = cursor.fetchall()
@@ -133,7 +134,7 @@ class PerguntaRepositorySQLite(PerguntaRepository, SQLiteBase):
             resultado = []
 
             for pergunta in perguntas:
-                cursor.execute("""SELECT * FROM alternativas WHERE pergunta_id = ? ORDER BY posicao""", (pergunta["id"],))
+                cursor.execute("""SELECT * FROM alternativa WHERE id_pergunta = ? ORDER BY posicao""", (pergunta["id"],))
 
                 dados = dict(pergunta)
                 alternativas = cursor.fetchall()

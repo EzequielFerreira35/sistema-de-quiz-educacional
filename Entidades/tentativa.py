@@ -85,7 +85,7 @@ class Tentativa:
             if resposta is None:
                 continue
 
-            if isinstance(resposta, bool) or not isinstance(resposta, int) or not 0 <= resposta <= len(pergunta.alternativas):
+            if isinstance(resposta, bool) or not isinstance(resposta, int) or not 0 <= resposta < len(pergunta.alternativas):
                 raise ValueError("Resposta inválida")
             
         self.__respostas = list(valor)

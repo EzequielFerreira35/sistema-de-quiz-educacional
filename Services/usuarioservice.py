@@ -14,12 +14,6 @@ class UsuarioService:
         self.repository = repository
 
     def cadastrar(self, nome: str, email: str, senha: str) -> Usuario | None:
-        if not isinstance(nome, str) or not nome.strip():
-            raise ValueError("Nome deve ser uma string não vazia!")
-       
-        if not isinstance(email, str) or not email.strip():
-            raise ValueError("Email deve ser uma string não vazia!")
-       
         if not isinstance(senha, str) or not senha.strip():
             raise ValueError("Senha deve ser uma string não vazia!")
         
@@ -38,13 +32,15 @@ class UsuarioService:
         if not re.search(r"[!@#$%¨&*]", senha):
             raise ValueError("A senha deve conter pelo menos um caractere especial.")
 
+        senha = senha.strip()
+        senha = HashServices.criptografar(senha)
+
+        usuario = Usuario(nome, email, senha)
+
         if self.repository.buscar_por_email(email):
             raise ValueError("Email já cadastrado")
 
-
         senha = HashServices.criptografar(senha)
-        usuario = Usuario(nome, email, senha)
-
         self.repository.salvar(usuario)
 
         return usuario
@@ -60,17 +56,16 @@ class UsuarioService:
         usuario_id = usuario_id.strip()
 
         usuario = self.repository.buscar_por_email(email)
-        usuario_por_id = self.repository.buscar_por_id(usuario_id)
 
         if usuario is None:
             raise ValueError(f"Não existe usuário com email: {email}")
 
-        if usuario_por_id.email != email:
-            raise ValueError("Não é possível alterar o email!")
+        usuario_existente = self.repository.buscar_por_email(email)
 
+        if usuario_existente is not None and  usuario_existente.id != usuario.id:
+            raise ValueError("Email já cadastrado!")
 
         usuario.email = email
-
         self.repository.salvar(usuario)
 
         return usuario

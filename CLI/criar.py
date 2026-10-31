@@ -64,5 +64,4 @@ def criar_parser():
         type=int,  
         help="ID do Usuário"
     )
-
     return parser

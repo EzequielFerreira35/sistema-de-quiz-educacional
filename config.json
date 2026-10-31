@@ -1,6 +1,6 @@
 {
     "quiz": {
-        "duracao": 20
+        "quiz_duracao": 20
     },
 
     "tentativa": {

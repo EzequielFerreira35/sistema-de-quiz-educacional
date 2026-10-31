@@ -48,7 +48,7 @@ class TentativaRepositorySQLite(TentativaRepository, SQLiteBase):
 
             linhas_respostas = cursor.execute("""SELECT respostas_tentativa.id_pergunta, alternativa.posicao
                                 FROM respostas_tentativa  
-                                LEFT JOIN alternativa ON respostas_tentativa.id_pergunta = alternativa.id_pergunta
+                                LEFT JOIN alternativa ON respostas_tentativa.id_alternativa = alternativa.id
                                 WHERE id_tentativa = ?""", (tentativa_id,)).fetchall()
         
 
@@ -78,7 +78,11 @@ class TentativaRepositorySQLite(TentativaRepository, SQLiteBase):
     def salvar(self, tentativa: Tentativa):
         with self.conexao() as conn:
             conn.execute("""INSERT INTO tentativa (id, id_quiz, id_usuario, data, pontuacao, tempo_total, status_conclusao)
-                            VALUES (?, ?, ?, ?, ?, ?, ?)""", 
+                            VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET
+                            data = excluded.data,
+                            pontuacao = excluded.pontuacao,
+                            tempo_total = excluded.pontuacao,
+                            status_conclusao = excluded.status_conclusao""",
                             (tentativa.id, tentativa.quiz.id, 
                              tentativa.usuario.id, 
                              tentativa.data, 
@@ -86,7 +90,7 @@ class TentativaRepositorySQLite(TentativaRepository, SQLiteBase):
                              tentativa.tempo_total, 
                              tentativa.status_conclusao))
 
-            conn.execute("""DELETE FROM respostas_tentativa WHERE id_tentativa = ?""", (tentativa, id))
+            conn.execute("""DELETE FROM respostas_tentativa WHERE id_tentativa = ?""", (tentativa.id,))
 
             perguntas = tentativa.quiz.lista_perguntas
  
@@ -107,7 +111,7 @@ class TentativaRepositorySQLite(TentativaRepository, SQLiteBase):
 
     def deletar(self, tentativa_id: str):
         with self.conexao() as conn:
-            conn.execute("""DELETE FROM tentativa WHERE id_tentativa = ?""", (tentativa_id,))
+            conn.execute("""DELETE FROM tentativa WHERE id = ?""", (tentativa_id,))
 
     def listar_por_usuario(self, usuario_id: str, quiz_id: str) -> list | None:
         with self.conexao() as conn:
@@ -129,6 +133,6 @@ class TentativaRepositorySQLite(TentativaRepository, SQLiteBase):
     def contar_por_usuario_e_quiz(self, usuario_id: str, quiz_id: str) -> int | None:
         with self.conexao() as conn:
             cursor = conn.execute("""SELECT COUNT(*) FROM tentativa 
-                                WHERE id_quiz = ? AND id_usuario = ?""", (usuario_id, quiz_id))
+                                WHERE id_quiz = ? AND id_usuario = ?""", (quiz_id, usuario_id))
             contagem = cursor.fetchone()
             return contagem[0]

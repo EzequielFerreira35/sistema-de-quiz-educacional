@@ -157,7 +157,7 @@ class Pergunta:
             id = linha["id"],
             tema = Tema(
                 nome=linha["nome_tema"],
-                id=linha["id"]),
+                id=linha["id_tema"]),
             enunciado = linha["enunciado"],
             indice_resposta= linha["indice_resposta"],
             dificuldade = linha["dificuldade"],

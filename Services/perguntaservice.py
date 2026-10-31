@@ -2,17 +2,15 @@ from Entidades.pergunta import Pergunta
 from Entidades.tema import Tema
 from Repository.PerguntaRepository import PerguntaRepository
 from Repository.TemaRepository import TemaRepository
-from Repository.QuizRepository import QuizRepository
 
 class PerguntaService:
     """
     Gerencia as regras de negócio e o ciclo de vida das Perguntas.
     Herda atributos e métodos da Classe BaseService.
     """
-    def __init__(self, pergunta_repo: PerguntaRepository, tema_repo: TemaRepository, quiz_repo: QuizRepository):
+    def __init__(self, pergunta_repo: PerguntaRepository, tema_repo: TemaRepository):
         self.pergunta_repo = pergunta_repo
         self.tema_repo = tema_repo
-        self.quiz_repo = quiz_repo
 
     def criar_pergunta(self, enunciado: str, tema: Tema, alternativas: list[str], indice_resposta: int, dificuldade: str):
         pergunta = Pergunta(
@@ -24,12 +22,12 @@ class PerguntaService:
         )
 
         if self.tema_repo.buscar_por_id(tema.id) is None:
-            ValueError("Tema inválido")
+            raise ValueError("Tema inválido")
 
         perguntas_tema =  self.pergunta_repo.listar_por_tema(tema.id)
 
         if pergunta in perguntas_tema:
-            ValueError("Pergunta duplicata: Essa pergunta já existe no Tema!")
+            raise ValueError("Pergunta duplicata: Essa pergunta já existe no Tema!")
 
         self.pergunta_repo.salvar(pergunta)
 
@@ -43,11 +41,15 @@ class PerguntaService:
 
         pergunta = self.pergunta_repo.buscar_por_id(pergunta_id)
 
+        if pergunta is None:
+            raise ValueError("Essa pergunta não existe!")
+
         if enunciado is not None:
             pergunta.enunciado = enunciado
 
         if alternativas is not None:
             pergunta.alternativas = alternativas
+
         if indice_resposta is not None:
             pergunta.indice_resposta = indice_resposta
 
@@ -58,6 +60,9 @@ class PerguntaService:
         for p in self.pergunta_repo.listar_por_tema(pergunta.tema.id):
             if pergunta == p and pergunta.id != p.id:
                 raise ValueError("Pergunta duplicata: Essa pergunta já existe no Tema!")
+
+        if pergunta.indice_resposta >= len(pergunta.alternativas):
+            raise ValueError("Índice da resposta fora do intervalo  das alternativas!")
             
         self.pergunta_repo.salvar(pergunta)
 

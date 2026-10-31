@@ -29,12 +29,14 @@ class TemaService:
 
     def deletar_tema(self, tema_id):
         if not isinstance(tema_id, str) or not tema_id.strip():
-            return
+            raise ValueError(" O tema_id deve ser uma string não vazia")
+
+        tema_id = tema_id.strip()
         
         if self.repository_tema.buscar_por_id(tema_id) is None:
             raise ValueError("Não é possível deletar temas que não existem!")
 
-        if self.repository_pergunta.listar_por_tema(tema_id) is not None:
+        if self.repository_pergunta.listar_por_tema(tema_id):
             raise ValueError("Não é possivível deletar temas quesjá tem perguntas cadastradas!")
         
         self.repository_tema.deletar(tema_id)

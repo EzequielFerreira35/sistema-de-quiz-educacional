@@ -20,10 +20,10 @@ class QuizService:
 
     def adicionar_pergunta(self, quiz_id: str, pergunta_id: str):
         if not isinstance(pergunta_id, str) or not pergunta_id.strip():
-            raise("Pergunta_id deve ser uma string não vazia!")
+            raise ValueError("Pergunta_id deve ser uma string não vazia!")
 
         if not isinstance(quiz_id, str) or not quiz_id.strip():
-            raise("Quiz_id deve ser uma string não vazia!")
+            raise ValueError("Quiz_id deve ser uma string não vazia!")
 
         quiz_id = quiz_id.strip()
         pergunta_id = pergunta_id.strip()
@@ -31,10 +31,15 @@ class QuizService:
         quiz = self.quiz_repo.buscar_por_id(quiz_id)
         pergunta = self.pergunta_repo.buscar_por_id(pergunta_id)
 
-        if self.pergunta_repo.buscar_por_id(pergunta_id) is None:
+        if quiz is None:
             raise ValueError("Essa Pergunta não existe!")
 
-        if self.quiz_repo.buscar_por_id(quiz_id) is None:
+        if pergunta is None:
             raise ValueError("Esse Quiz não existe!")
 
-        return quiz.adicionar_pergunta(pergunta)
+        adicionada = quiz.adicionar_pergunta(pergunta)
+
+        if adicionada:
+            self.quiz_repo.salvar(quiz)
+
+        return adicionada

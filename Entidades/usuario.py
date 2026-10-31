@@ -45,7 +45,7 @@ class Usuario:
 
     @username.setter
     def username(self, valor: str):
-        if not valor.strip() or not isinstance(valor, str):
+        if not isinstance(valor, str) or not valor.strip():
             raise ValueError("Nome deve ser do tipo string não vazio!")
         self.__username = valor.strip()
     
@@ -55,7 +55,7 @@ class Usuario:
 
     @email.setter
     def email(self, valor: str):
-        if not valor.strip() or not isinstance(valor, str):
+        if not isinstance(valor, str) or not valor.strip():
             raise ValueError("Email deve ser do tipo string não vazio!")
 
         valor =  valor.strip()
