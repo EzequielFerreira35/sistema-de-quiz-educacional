@@ -20,13 +20,20 @@ class TentativaRepository(ABC):
         pass
 
     @abstractmethod
-    def listar_por_usuario(self, usuario_id: str, quiz_id: str) -> list | None:
+    def listar_por_usuario(self, usuario_id: str, quiz_id: str) -> list[dict] | None:
         pass
 
     @abstractmethod
     def contar_por_usuario_e_quiz(self, usuario_id: str, quiz_id: str) -> int:
         pass
 
+    @abstractmethod
+    def listar_concluidas_por_quiz(self, quiz_id: str) -> list[dict]:
+        pass
+
+    @abstractmethod
+    def listar_respostas_por_pergunta(self, usuario_id: str | None = None) -> list[dict]:
+        pass
 
 class TentativaRepositorySQLite(TentativaRepository, SQLiteBase):
     def __init__(self) -> None:
@@ -62,7 +69,8 @@ class TentativaRepositorySQLite(TentativaRepository, SQLiteBase):
             for pergunta in quiz.lista_perguntas:
                 respostas.append(por_pergunta.get(pergunta.id))
 
-            return Tentativa(
+
+        return Tentativa(
                 quiz=quiz,
                 respostas=respostas,
                 usuario=usuario,
@@ -113,22 +121,25 @@ class TentativaRepositorySQLite(TentativaRepository, SQLiteBase):
         with self.conexao() as conn:
             conn.execute("""DELETE FROM tentativa WHERE id = ?""", (tentativa_id,))
 
-    def listar_por_usuario(self, usuario_id: str, quiz_id: str) -> list | None:
+    def listar_por_usuario(self, usuario_id: str, quiz_id: str) -> list[dict] | None:
         with self.conexao() as conn:
-            cursor = conn.execute("""SELECT * FROM tentativa 
-                                    JOIN usuario ON tentativa.id_usuario = usuario.id
+            cursor = conn.execute("""SELECT tentativa.data, tentativa.pontuacao, tentativa.tempo_total, tentativa.status_conclusao,
+                                    quiz.titulo, tentativa.id   
+                                    FROM tentativa 
                                     JOIN quiz ON tentativa.id_quiz = quiz.id
 
                                     WHERE tentativa.id_usuario = ?
-                                    AND tentativa.id_quiz = ?
+                                    AND tentativa.id_quiz = ? 
+
+                                    ORDER BY tentativa.data
                                     """, (usuario_id, quiz_id))
 
             dados = cursor.fetchall()
-
-        if dados is None:
-            return
         
-        return dados
+        return [dict(linha) for linha in dados]
+
+
+
 
     def contar_por_usuario_e_quiz(self, usuario_id: str, quiz_id: str) -> int | None:
         with self.conexao() as conn:
@@ -136,3 +147,60 @@ class TentativaRepositorySQLite(TentativaRepository, SQLiteBase):
                                 WHERE id_quiz = ? AND id_usuario = ?""", (quiz_id, usuario_id))
             contagem = cursor.fetchone()
             return contagem[0]
+
+
+    def listar_concluidas_por_quiz(self, quiz_id: str) -> list[dict]:
+        with self.conexao() as conn:
+            cursor = conn.execute("""SELECT pontuacao, tempo_total FROM tentativa
+                                    WHERE id_quiz = ?  AND status_conclusao = 1""", (quiz_id,))
+
+            dados = cursor.fetchall()
+        
+        return [dict(linha) for linha in dados]
+
+
+
+    def listar_concluidas_por_usuario(self, usuario_id: str, quiz_id: str) -> list[dict]:
+        with self.conexao() as conn:
+            cursor = conn.execute("""SELECT 
+                                    usuario.id AS usuario_id, usuario.username AS usuario_nome,
+                                    quiz.id AS quiz_id, quiz.titulo AS quiz_titulo, 
+                                    tentativa.pontuacao, tentativa.tempo_total, tentativa.data
+
+                                    FROM tentativa
+                                    JOIN usuario ON tentativa.id_usuario = usuario.id
+                                    JOIN quiz ON tentativa.id_quiz = quiz.id
+                                    
+                                    WHERE tentativas.status_conclusao = 1
+                                    AND usuario_id = ?
+                                    AND quiz_id = ?
+                                    ORDER BY tentativa.data""", (usuario_id, quiz_id))
+
+            dados = cursor.fetchall()
+
+        return [dict(linha) for linha in dados]
+
+
+
+    def listar_respostas_por_pergunta(self, usuario_id: str | None = None) -> list:
+        with self.conexao() as conn:
+            cursor = conn.execute("""SELECT 
+                                    pergunta.id AS pergunta_id, pergunta.enunciado AS pergunta_enunciado,
+                                    tema.id AS tema_id, tema.nome AS nome_tema,
+                                    
+                                    COUNT(*) as total_respostas,
+                                    SUM(CASE WHEN alternativa.posicao = pergunta.indice_resposta THEN 1 ELSE 0 END) AS acertos
+
+                                    FROM respostas_tentativa
+                                    LEFT JOIN alternativa ON respostas_tentativa.id_alternativa = alternativa.id
+                                    JOIN pergunta ON respostas_tentativa.id_pergunta = pergunta.id
+                                    JOIN tema ON pergunta.id_tema = tema.id
+                                    JOIN tentativa ON respostas_tentativa.id_tentativa = tentativa.id 
+                                    
+                                    WHERE tentativa.status_conclusao = 1 AND (? IS NULL OR tentativa.id_usuario = ?)
+                                    
+                                    GROUP BY  pergunta_id, pergunta_enunciado, nome_tema
+                                    """, (usuario_id, usuario_id))
+            dados = cursor.fetchall()
+
+        return [dict(linha) for linha in dados]
