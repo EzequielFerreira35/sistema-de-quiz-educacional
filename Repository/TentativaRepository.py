@@ -32,6 +32,10 @@ class TentativaRepository(ABC):
         pass
 
     @abstractmethod
+    def listar_concluidas_por_usuario(self, usuario_id: str | None = None) -> list[dict]:
+        pass
+
+    @abstractmethod
     def listar_respostas_por_pergunta(self, usuario_id: str | None = None) -> list[dict]:
         pass
 
@@ -160,7 +164,7 @@ class TentativaRepositorySQLite(TentativaRepository, SQLiteBase):
 
 
 
-    def listar_concluidas_por_usuario(self, usuario_id: str, quiz_id: str) -> list[dict]:
+    def listar_concluidas_por_usuario(self, usuario_id: str | None = None) -> list[dict]:
         with self.conexao() as conn:
             cursor = conn.execute("""SELECT 
                                     usuario.id AS usuario_id, usuario.username AS usuario_nome,
@@ -171,10 +175,9 @@ class TentativaRepositorySQLite(TentativaRepository, SQLiteBase):
                                     JOIN usuario ON tentativa.id_usuario = usuario.id
                                     JOIN quiz ON tentativa.id_quiz = quiz.id
                                     
-                                    WHERE tentativas.status_conclusao = 1
-                                    AND usuario_id = ?
-                                    AND quiz_id = ?
-                                    ORDER BY tentativa.data""", (usuario_id, quiz_id))
+                                    WHERE tentativa.status_conclusao = 1
+                                    AND (? IS NULL OR tentativa.id_usuario = ?)
+                                    ORDER BY tentativa.data""", (usuario_id, usuario_id))
 
             dados = cursor.fetchall()
 
@@ -200,6 +203,7 @@ class TentativaRepositorySQLite(TentativaRepository, SQLiteBase):
                                     WHERE tentativa.status_conclusao = 1 AND (? IS NULL OR tentativa.id_usuario = ?)
                                     
                                     GROUP BY  pergunta_id, pergunta_enunciado, nome_tema
+                                    
                                     """, (usuario_id, usuario_id))
             dados = cursor.fetchall()
 

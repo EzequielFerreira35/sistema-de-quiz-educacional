@@ -36,7 +36,7 @@ class Tentativa:
         self.__id = id if id is not None else str(uuid.uuid4())
         self.__usuario = usuario
         self.__quiz = quiz
-        self.data = data if data is not None else str(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
+        self.data = data if data is not None else str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         self.respostas = respostas if respostas is not None else []
         self.__pontuacao = pontuacao
         self.tempo_total = tempo_total
@@ -60,7 +60,7 @@ class Tentativa:
 
     @data.setter
     def data(self, valor: str):
-        formato_padrao = "%d/%m/%Y %H:%M:%S"
+        formato_padrao = "%Y-%m-%d %H:%M:%S"
         try:
             datetime.strptime(valor, formato_padrao)
         except:

@@ -14,5 +14,10 @@
             "dificil": 3
         },
         "qtd_alternativas": [3, 5]
+    },
+
+    "relatorio": {
+        "taxa_aprovacao": 0.6,
+        "respostas_minimas": 3
     }
 }

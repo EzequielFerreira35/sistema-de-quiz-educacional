@@ -36,6 +36,16 @@ class ConfigManager:
         dados = self._read()
         return dados.get("pergunta", {}).get("qtd_alternativas", 0)
 
+    @property
+    def taxa_aprovacao(self) -> int:
+        dados = self._read()
+        return dados.get("relatorio", {}).get("taxa_aprovacao", 0.6)
+
+    @property
+    def respostas_minimas(self) -> int:
+        dados = self._read()
+        return dados.get("relatorio", {}).get("respostas_minimas", 3)
+
     def atualizar_config(self, chave_principal, subchave, valor) -> bool:
         dados = self._read
 
