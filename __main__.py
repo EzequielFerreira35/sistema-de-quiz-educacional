@@ -1,4 +1,5 @@
 from CLI.parser import criar_parser
+from CLI.Comandos.quiz import criar_quiz, listar_quizzes, adicionar_pergunta
 
 from Repository.Inicializador import InicializarDataBase
 from Repository.QuizRepository import QuizRepositorySQLite
@@ -18,10 +19,14 @@ def main():
     parser = criar_parser()
     args = parser.parse_args()
 
-    args.func(args, quiz_service)
+    if args.func == criar_quiz:
+        args.func(args, quiz_service)
 
+    elif args.func == listar_quizzes:
+        args.func(args, quiz_repo)
 
-
+    elif args.func == adicionar_pergunta:
+        args.func
 
 if __name__ == "__main__":
     main()

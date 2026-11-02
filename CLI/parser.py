@@ -1,6 +1,6 @@
 import argparse
 
-from .Comandos.quiz import criar_quiz
+from .Comandos.quiz import criar_quiz, listar_quizzes, adicionar_pergunta
 
 def criar_parser():
     parser = argparse.ArgumentParser(
@@ -51,9 +51,9 @@ def criar_parser():
     )
 
     atualizar_email_parser.add_argument(
-        "--email-atual",
+        "--usuario",
         required=True,
-        help="E-mail atual do usuário"
+        help="ID do usuário"
     )
 
     atualizar_email_parser.add_argument(
@@ -152,10 +152,12 @@ def criar_parser():
 
     criar_quiz_parser.set_defaults(func=criar_quiz)
 
-    quiz_subcomandos.add_parser(
+    listar_quiz_parser = quiz_subcomandos.add_parser(
         "listar",
         help="Listar quizzes cadastrados"
     )
+
+    listar_quiz_parser.set_defaults(func=listar_quizzes)
 
     responder_quiz_parser = quiz_subcomandos.add_parser(
         "responder",
@@ -191,6 +193,8 @@ def criar_parser():
         help="ID da pergunta"
     )
 
+    adicionar_pergunta_parser.set_defaults(func=adicionar_pergunta)
+    
     pergunta = comandos.add_parser(
         "pergunta",
         help="Gerenciamento de conteúdos"
