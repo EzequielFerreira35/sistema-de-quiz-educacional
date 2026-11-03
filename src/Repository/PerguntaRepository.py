@@ -32,6 +32,10 @@ class PerguntaRepository(ABC):
     def listar_por_quiz(self, quiz_id) -> list[Pergunta]:
         pass
 
+    @abstractmethod
+    def possui_respostas_concluidas(self, pergunta_id: str) -> bool:
+        pass
+
 class PerguntaRepositorySQLite(PerguntaRepository, SQLiteBase):
     def __init__(self) -> None:
         super().__init__()
@@ -144,3 +148,19 @@ class PerguntaRepositorySQLite(PerguntaRepository, SQLiteBase):
 
 
             return resultado
+
+    def possui_respostas_concluidas(self, pergunta_id: str) -> bool:
+        with self.conexao() as conn:
+            cursor = conn.execute("""
+                SELECT 1
+                FROM respostas_tentativa
+                JOIN tentativa 
+                ON respostas_tentativa.id_tentativa = tentativa.id
+                WHERE respostas_tentativa.id_pergunta = ?
+                AND tentativa.status_conclusao = 1
+                LIMIT 1
+            """, (pergunta_id,))
+
+            resultado = cursor.fetchone()
+
+            return resultado is not None

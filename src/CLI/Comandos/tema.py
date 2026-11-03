@@ -44,6 +44,7 @@ def consultar_tema(args, tema_repo):
 
         if tema is None:
             print("\n\033[Esse tema não existe.\033[0m")
+            return
 
         cabecalhos = ["ID DO TEMA", "NOME DO TEMA"]
         

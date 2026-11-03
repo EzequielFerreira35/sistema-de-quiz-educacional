@@ -382,15 +382,9 @@ def criar_parser():
     )
 
     relatorio_tentativa_parser.add_argument(
-        "--quiz",
+        "--tentativa",
         required=True,
-        help="ID do quiz"
-    )
-
-    relatorio_tentativa_parser.add_argument(
-        "--usuario",
-        required=True,
-        help="ID do usuário"
+        help="ID da tenativa"
     )
 
     relatorio_tentativa_parser.set_defaults(func=relatorio_tentativa)

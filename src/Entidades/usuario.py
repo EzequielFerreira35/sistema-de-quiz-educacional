@@ -33,7 +33,7 @@ class Usuario:
         self.__tentativas = []
 
     def __str__(self) -> str:
-        return f"id={self.id}, username={self.username}, email={self.email}, senha={self.senha}, tentativas={self.tentativas}"
+        return f"id={self.id}, username={self.username}, email={self.email}, tentativas={self.tentativas}"
 
     @property
     def id(self) -> str:

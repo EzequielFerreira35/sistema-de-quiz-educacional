@@ -4,7 +4,6 @@ from .sqlite_base import SQLiteBase
 class InicializarDataBase(SQLiteBase):
     def __init__(self) -> None:
         super().__init__()
-        self.inicializar()
 
     def inicializar(self):
         with self.conexao() as conn:

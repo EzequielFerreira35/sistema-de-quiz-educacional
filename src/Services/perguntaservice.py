@@ -2,8 +2,10 @@ from src.Entidades.pergunta import Pergunta
 from src.Entidades.tema import Tema
 from src.Repository.PerguntaRepository import PerguntaRepository
 from src.Repository.TemaRepository import TemaRepository
+from .baseservice import BaseService
+from .mixins import ValidadorIdMixin
 
-class PerguntaService:
+class PerguntaService(BaseService, ValidadorIdMixin):
     """
     Gerencia as regras de negócio e o ciclo de vida das Perguntas.
     Herda atributos e métodos da Classe BaseService.
@@ -34,15 +36,17 @@ class PerguntaService:
         return pergunta
 
     def editar_pergunta(self, pergunta_id: str, enunciado = None, alternativas = None, indice_resposta = None, dificuldade = None):
-        if not isinstance(pergunta_id, str) or not pergunta_id.strip():
-            raise ValueError("O id da pergunta deve ser uma string não vazia!")
-
-        pergunta_id = pergunta_id.strip()
+        pergunta_id = self._validar_id(pergunta_id, "pergunta_id")
 
         pergunta = self.pergunta_repo.buscar_por_id(pergunta_id)
 
         if pergunta is None:
             raise ValueError("Essa pergunta não existe!")
+
+        if self.pergunta_repo.possui_respostas_concluidas(pergunta_id):
+            raise ValueError(
+                "Não é possível editar uma pergunta que já possui respostas em tentativas concluídas!"
+            )
 
         if enunciado is not None:
             pergunta.enunciado = enunciado
@@ -69,8 +73,7 @@ class PerguntaService:
         return pergunta
 
     def listar_por_tema(self, tema_id):
-        if not isinstance(tema_id, str) or not tema_id.strip():
-            raise ValueError("O id do tema deve ser uma string não vazia!")
+        tema_id = self._validar_id(tema_id, "tema_id")
 
         if self.tema_repo.buscar_por_id(tema_id) is None:
             raise ValueError("Esse tema não existe!")

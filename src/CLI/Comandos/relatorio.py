@@ -4,7 +4,7 @@ def relatorio_perguntas_dificeis(args, relatorio_service):
     try:
         relatorio = relatorio_service.gerar_questoes_mais_erradas(args.limite)
 
-        if relatorio is None or relatorio is []:
+        if not relatorio:
             print("\n\033[31mNenhuma pergunta cadastrado.\033[0m")
             return
 
@@ -75,7 +75,7 @@ def relatorio_evolucao(args, relatorio_service):
     try:
         tentativas = relatorio_service.evolucao_usuario(args.usuario)
 
-        if tentativas is None:
+        if not tentativas:
             print("\n\033[31mNenhuma tentativa cadastrado.\033[0m")
             return
 
@@ -105,12 +105,12 @@ def relatorio_tentativa(args, relatorio_service, tentativa_repo):
         relatorio = relatorio_service.gerar_relatorio_basico(args.tentativa)
         tentativa = tentativa_repo.buscar_por_id(args.tentativa)
 
-        if relatorio is None:
+        if not relatorio or tentativa is None:
             print("\n\033[31mentativa não cadastrado.\033[0m")
             return
         
         dados = {}
-        for chave, valor in relatorio:
+        for chave, valor in relatorio.items():
             dados[chave] = valor
 
         print("\n=== RELÁTORIO ===")
@@ -124,7 +124,7 @@ def relatorio_ranking(args, relatorio_service):
     try:
         usuarios = relatorio_service.gerar_ranking_usuarios()
 
-        if usuarios is None:
+        if not usuarios:
             print("\n\033[31mNenhuma usuario cadastrado.\033[0m")
             return
 

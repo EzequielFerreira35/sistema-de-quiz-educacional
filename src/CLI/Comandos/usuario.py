@@ -46,6 +46,7 @@ def consultar_usuario(args, usuario_repo):
 
         if usuario is None:
             print("\n\033[Esse usuário não existe.\033[0m")
+            return
 
         cabecalhos = ["ID DO USUÁRIO", "NOME DO USUÁRIO", "EMAIL DO USUÁRIO"]
         

@@ -93,7 +93,7 @@ class TentativaRepositorySQLite(TentativaRepository, SQLiteBase):
                             VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET
                             data = excluded.data,
                             pontuacao = excluded.pontuacao,
-                            tempo_total = excluded.pontuacao,
+                            tempo_total = excluded.tempo_total,
                             status_conclusao = excluded.status_conclusao""",
                             (tentativa.id, tentativa.quiz.id, 
                              tentativa.usuario.id, 
@@ -200,7 +200,9 @@ class TentativaRepositorySQLite(TentativaRepository, SQLiteBase):
                                     JOIN tema ON pergunta.id_tema = tema.id
                                     JOIN tentativa ON respostas_tentativa.id_tentativa = tentativa.id 
                                     
-                                    WHERE tentativa.status_conclusao = 1 AND (? IS NULL OR tentativa.id_usuario = ?)
+                                    WHERE tentativa.status_conclusao = 1
+                                    AND respostas_tentativa.id_alternativas IS NOT NULL 
+                                    AND (? IS NULL OR tentativa.id_usuario = ?)
                                     
                                     GROUP BY  pergunta_id, pergunta_enunciado, nome_tema
                                     

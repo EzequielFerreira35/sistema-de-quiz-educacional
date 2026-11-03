@@ -3,14 +3,16 @@ import re
 from src.Entidades.usuario import Usuario
 from src.Repository.UsuarioRepository import UsuarioRepository
 from .hash import HashServices
+from .baseservice import BaseService
+from .mixins import ValidadorIdMixin
 
-
-class UsuarioService:
+class UsuarioService(BaseService, ValidadorIdMixin):
     """
     Gerencia as regras de negócio e o ciclo de vida dos Usuários.
     Herda atributos e métodos da Classe BaseService.
     """
     def __init__(self, repository: UsuarioRepository):
+        super().__init__()
         self.repository = repository
 
     def cadastrar(self, nome: str, email: str, senha: str) -> Usuario | None:
@@ -40,15 +42,13 @@ class UsuarioService:
         if self.repository.buscar_por_email(email):
             raise ValueError("Email já cadastrado")
 
-        senha = HashServices.criptografar(senha)
         self.repository.salvar(usuario)
 
         return usuario
 
 
     def atualizar_email(self, email: str, usuario_id: str) -> Usuario:
-        if not isinstance(email, str) or not email.strip():
-            raise ValueError("Email deve ser uma string não vazia!")
+        usuario_id = self._validar_id(usuario_id, "usuario_id")
 
         if not isinstance(usuario_id, str) or not usuario_id.strip():
             raise ValueError("Usuario_id deve ser uma string não vazia!")

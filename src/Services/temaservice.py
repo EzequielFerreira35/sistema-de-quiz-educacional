@@ -1,14 +1,17 @@
 from src.Repository.TemaRepository import TemaRepository
 from src.Repository.PerguntaRepository import PerguntaRepository
 from src.Entidades.tema import Tema
+from .baseservice import BaseService
+from .mixins import ValidadorIdMixin
 
 
-class TemaService:
+class TemaService(BaseService, ValidadorIdMixin):
     """
     Gerencia as regras de negócio e o ciclo de vida dos Temas.
     Herda atributos e métodos da Classe BaseService.
     """
     def __init__(self, repository_tema: TemaRepository, repository_pergunta: PerguntaRepository):
+        super().__init__()
         self.repository_tema = repository_tema
         self.repository_pergunta = repository_pergunta
 
@@ -28,8 +31,7 @@ class TemaService:
         return tema            
 
     def deletar_tema(self, tema_id):
-        if not isinstance(tema_id, str) or not tema_id.strip():
-            raise ValueError(" O tema_id deve ser uma string não vazia")
+        tema_id = self._validar_id(tema_id, "validar_id")
 
         tema_id = tema_id.strip()
         

@@ -48,7 +48,7 @@ def listar_perguntas(args, pergunta_repo):
 
 def listar_por_tema(args, pergunta_service):
     try:
-        perguntas = pergunta_service.listar_por_tema()
+        perguntas = pergunta_service.listar_por_tema(args.tema)
 
         if perguntas is None:
             print("\n\033[31mNenhuma pergunta cadastrada.\033[0m")

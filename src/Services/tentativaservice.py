@@ -2,26 +2,25 @@ from src.Repository.TentativaRepository import TentativaRepository
 from src.Repository.QuizRepository import QuizRepository
 from src.Repository.UsuarioRepository import UsuarioRepository
 from src.Entidades.tentativa import Tentativa
-from src.configmanager import ConfigManager
+from .baseservice import BaseService
+from .mixins import ValidadorIdMixin
 
-class TentativaService:
+
+class TentativaService(BaseService, ValidadorIdMixin):
     """
     Gerencia as regras de negócio e o ciclo de vida das Tentativas.
     Herda atributos e métodos da Classe BaseService.
     """
-    _CONFIG = ConfigManager()
 
     def __init__(self, usuario_repo: UsuarioRepository, quiz_repo: QuizRepository, tentativa_repo: TentativaRepository):
+        super().__init__()
         self.usuario_repo = usuario_repo
         self.quiz_repo = quiz_repo
         self.tentativa_repo = tentativa_repo
 
     def iniciar_quiz(self, usuario_id: str, quiz_id: str):
-        if not isinstance(usuario_id, str) or not usuario_id.strip():
-            raise ValueError("Usuario_id deve ser uma string não vazia!")  
-
-        if not isinstance(quiz_id, str) or not quiz_id.strip():
-            raise ValueError("Quiz_id deve ser uma string não vazia!")
+        usuario_id = self._validar_id(usuario_id, "usuario_id")
+        quiz_id = self._validar_id(quiz_id, "quiz_id")
 
         quiz_id = quiz_id.strip()
         usuario_id = usuario_id.strip()
@@ -30,12 +29,15 @@ class TentativaService:
         usuario = self.usuario_repo.buscar_por_id(usuario_id)
 
         if quiz is None:
-            raise ValueError("Esse Quiz não existe!")
+            raise ValueError("Esse quiz não existe!")
+
+        if not quiz.lista_perguntas:
+            raise ValueError("Esse quiz não possui perguntas")
 
         if usuario is None:
             raise ValueError("Esse Usuário não existe!")
 
-        if self.tentativa_repo.contar_por_usuario_e_quiz(usuario_id, quiz_id) >= self._CONFIG.max_tentativas_por_quiz:
+        if self.tentativa_repo.contar_por_usuario_e_quiz(usuario_id, quiz_id) >= quiz.limite_tentativas:
             raise ValueError("Limite de tentativas atingido!")
         
         tentativa = Tentativa(
@@ -49,11 +51,9 @@ class TentativaService:
         return tentativa
 
     def responder_quiz(self, tentativa_id: str, pergunta_id: str, respostas: list[int], tempo: int):
-        if not isinstance(pergunta_id, str) or not pergunta_id.strip():
-            raise ValueError("O id da pergunta deve ser uma string não vazia!")
+        pergunta_id = self._validar_id(pergunta_id, "pergunta_id")
 
-        if not isinstance(tentativa_id, str) or not tentativa_id.strip():
-            raise ValueError("O id da tentativa deve ser uma string não vazia!")
+        tentativa_id = self._validar_id(tentativa_id, "tentativa_id")
 
         if not isinstance(tempo, int) or isinstance(tempo, bool) or tempo < 0:
             raise ValueError("Tempo inválido")
@@ -85,8 +85,7 @@ class TentativaService:
         return tentativa
         
     def terminar_quiz(self, tentativa_id: str, tempo_total = 0):
-        if not isinstance(tentativa_id, str) or not tentativa_id.strip():
-            raise ValueError("O id da tentativa deve ser uma string não vazia!")
+        tentativa_id = self._validar_id(tentativa_id, "tentativa_id")
 
         tentativa_id = tentativa_id.strip()
 

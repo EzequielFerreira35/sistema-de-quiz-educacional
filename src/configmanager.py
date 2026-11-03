@@ -46,13 +46,3 @@ class ConfigManager:
         dados = self._read()
         return dados.get("relatorio", {}).get("respostas_minimas", 3)
 
-    def atualizar_config(self, chave_principal, subchave, valor) -> bool:
-        dados = self._read
-
-        if chave_principal or subchave not in dados:
-            return False
-
-        dados[chave_principal][subchave] = valor
-
-        with open(self.caminho, 'r', encoding='utf-8') as arquivo:
-            json.dump(dados, arquivo, indent=4, ensure_ascii=False)

@@ -22,7 +22,7 @@ def listar_quizzes(args, quiz_repo):
     try:
         quizzes = quiz_repo.listar_todos()
 
-        if quizzes is None:
+        if not quizzes:
             print("\n\033[31mNenhum quiz cadastrado.\033[0m")
             return
 
@@ -60,17 +60,17 @@ def adicionar_pergunta(args, quiz_service):
 
 def consultar_quiz(args, quiz_repo):
     try:
-        quiz = quiz_repo.buscaar_por_id(quiz_id = args.quiz)
+        quiz = quiz_repo.buscar_por_id(quiz_id = args.quiz)
 
         if quiz is None:
             print("\n\033[Esse não quiz existe.\033[0m")
+            return
 
         cabecalhos = ["ID DO QUIZ", "TÍTULO DO QUIZ"]
         
         larguras = [40, 52] 
 
-        dados = []
-        dados.append([quiz.id, quiz.titulo])
+        dados = [[quiz.id, quiz.titulo]]
 
         print("\n=== RESULTADO DA BUSCA ===")
 
@@ -96,20 +96,25 @@ def responder_quiz(args, tentativa_service):
             print(f"{j}) {alt}")
 
         while True:
-            resposta = int(input("Escolha uma alternativa: "))
+            try:
+                resposta = int(input("Escolha uma alternativa: "))
+
+            except ValueError:
+                print("Digite apenas o número da alternativa")
+                continue
 
             if resposta < 1 or resposta > len(pergunta.alternativas):
                 print("Alternativa inválida! Tente novamente.")
                 continue
             break
 
-        respostas[i-1] = resposta
-
         tempo_atual = int((time.monotonic() - inicio) / 60)
 
         if tempo_atual >= tentativa.quiz.tempo_limite:
             print("Tempo esgotado!")
             break
+
+        respostas[i-1] = resposta - 1
 
         tentativa_service.responder_quiz(
                 tentativa_id=tentativa.id,

@@ -1,26 +1,27 @@
 from src.Repository.TentativaRepository import TentativaRepository
 from src.Repository.QuizRepository import QuizRepository
 from src.Repository.UsuarioRepository import UsuarioRepository
-from src.configmanager import ConfigManager
+from .baseservice import BaseService
 from .mixins import ValidadorIdMixin
 
-class RelatorioService(ValidadorIdMixin):
+class RelatorioService(BaseService, ValidadorIdMixin):
     """
     Gerencia as regras de negócio e o ciclo de vida dos Relatórios.
     Herda atributos e métodos da Classe BaseService.
     """
 
     def __init__(self, tentativa_repo: TentativaRepository, quiz_repo: QuizRepository, usuario_repo: UsuarioRepository):
+        super().__init__()
         self.tentativa_repo = tentativa_repo
         self.quiz_repo = quiz_repo
         self.usuario_repo = usuario_repo
-        self.nota_corte = ConfigManager().taxa_aprovacao
-        self.respostas_minima = ConfigManager().respostas_minimas
+        self.nota_corte = self.config.taxa_aprovacao
+        self.respostas_minima = self.config.respostas_minimas
 
     def _percentuais(self, quiz_id) -> list[float]:
         quiz_id = self._validar_id(quiz_id, "quiz_id")
+        
         quiz = self.quiz_repo.buscar_por_id(quiz_id)
-
         if quiz is None:
             raise ValueError("Esse quiz não existe!")
 
@@ -55,19 +56,19 @@ class RelatorioService(ValidadorIdMixin):
         for percentual in self._percentuais(quiz_id):
             n = percentual * 100
 
-            if 0 <= n <= 19:
+            if 0 <= n <= 20:
                 distribuitcao["0-19%"] += 1
 
-            elif 20 <= n <= 39:
+            elif n < 40:
                 distribuitcao["20-39%"] += 1
 
-            elif 40 <= n <= 59:
+            elif n < 60:
                 distribuitcao["40-59%"] += 1
 
-            elif 60 <= n <= 79:
+            elif n <=80:
                 distribuitcao["60-79%"] += 1
 
-            else:
+            elif n <= 100:
                 distribuitcao["80-100%"] += 1
 
         return distribuitcao
@@ -79,6 +80,9 @@ class RelatorioService(ValidadorIdMixin):
 
         if tentativa is None:
             raise ValueError("Essa tentativa não existe!")
+
+        if not tentativa.status_conclusao:
+            raise ValueError("Essa tentativa não foi concluída!")
 
         perguntas = tentativa.quiz.lista_perguntas
         maximo = tentativa.quiz.calcular_pontuacao_maxima()
