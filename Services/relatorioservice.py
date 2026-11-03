@@ -28,7 +28,7 @@ class RelatorioService(ValidadorIdMixin):
         if maximo == 0:
             return []
 
-        concluidas = self.tentativa_repo.listar_concluidas_por_quiz(quiz_id) # type: ignore
+        concluidas = self.tentativa_repo.listar_concluidas_por_quiz(quiz_id)
 
         return [tentativa["pontuacao"] / maximo for tentativa in concluidas]
 
@@ -86,8 +86,10 @@ class RelatorioService(ValidadorIdMixin):
         dados = {
             "pontuacao_atingida": tentativa.pontuacao,
             "pontuacao_maxima": maximo,
-            "taxa_de_acertos": tentativa.pontuacao / maximo,
+            "taxa_de_acertos": tentativa.taxa_acertos(),
+            "aproveitamento_pontuacao": tentativa.pontuacao/ maximo if maximo > 0 else 0,
             "tempo_gasto": tentativa.tempo_total,
+            "respostas_usuario": tentativa.respostas,
             "gabarito": [p.indice_resposta for p in perguntas]
         }
 
@@ -97,7 +99,7 @@ class RelatorioService(ValidadorIdMixin):
         tentativas = self.tentativa_repo.listar_concluidas_por_usuario()
 
         usuarios_agrupados = {}
-        ranking = [] # posicao, usuario, usuario_id, pontuacao_media -> pontuacao_total / qtd_tentativas
+        ranking = [] 
 
         for tentativa in tentativas:
             usuario = tentativa["usuario_id"]

@@ -100,7 +100,7 @@ class Tentativa:
 
     @tempo_total.setter
     def tempo_total(self, valor: int):
-        if not isinstance(valor, int) or valor < 0:
+        if isinstance(valor, bool) or not isinstance(valor, int) or valor < 0:
             raise ValueError("Tempo total não pode ser negativo!")
 
         self.__tempo_total = valor

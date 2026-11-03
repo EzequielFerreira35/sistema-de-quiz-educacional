@@ -1,3 +1,5 @@
+from textwrap import wrap
+
 def desenhar_tabela(cabecalhos, colunas_larguras, linhas_dados):
     TOPO_ESQ, TOPO_DIR = "┌", "┐"
     BASE_ESQ, BASE_DIR = "└", "┘"
@@ -35,5 +37,33 @@ def desenhar_tabela(cabecalhos, colunas_larguras, linhas_dados):
     base = BASE_ESQ + INTER_BASE.join(LINHA_HORIZ * w for w in colunas_larguras) + BASE_DIR
     print(base)
 
-def desenhar_card():
-    ...
+def desenhar_card(titulo, id, informacoes: dict):
+    TOPO_ESQ, TOPO_DIR = "┌", "┐"
+    BASE_ESQ, BASE_DIR = "└", "┘"
+    LADO_ESQ, LADO_DIR = "├", "┤"
+    CRUZ, LINHA_HORIZ, LINHA_VERT = "┼", "─", "│"
+
+    largura = 44
+
+    topo = TOPO_ESQ + LINHA_HORIZ * (largura) + TOPO_DIR
+    titulo_card = f"{LINHA_VERT}{titulo:^{largura}}{LINHA_VERT}"
+    id_card = f"{LINHA_VERT}{('ID: ' + id):^{largura}}{LINHA_VERT}"
+    linha = LADO_ESQ + LINHA_HORIZ * (largura) + LADO_DIR
+
+    print(topo)
+    print(titulo_card)
+    print(id_card)
+    print(linha)
+
+    for chave, valor in informacoes.items():
+        if chave == 'id' or chave == 'nome' or chave == 'titulo' or chave == "tema":
+            continue
+        texto = f"{chave}: {valor}"
+
+        for parte in wrap(texto, width=largura):
+            info = f"{LINHA_VERT}{parte:^{largura}}{LINHA_VERT}"
+            print(info)
+
+    base = BASE_ESQ + LINHA_HORIZ * (largura) + BASE_DIR
+    print(base)
+

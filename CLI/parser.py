@@ -1,6 +1,10 @@
 import argparse
 
-from .Comandos.quiz import criar_quiz, listar_quizzes, adicionar_pergunta
+from .Comandos.quiz import criar_quiz, listar_quizzes, adicionar_pergunta, consultar_quiz, responder_quiz
+from .Comandos.relatorio import relatorio_desempenho, relatorio_ranking, relatorio_evolucao, relatorio_perguntas_dificeis, relatorio_tentativa, relatorio_quiz
+from .Comandos.pergunta import criar_pergunta, editar_pergunta, listar_perguntas, listar_por_tema
+from .Comandos.usuario import cadastrar_usuario, consultar_usuario, atualizar_email, listar_usuarios
+from .Comandos.tema import criar_tema, consultar_tema, listar_temas, deletar_tema
 
 def criar_parser():
     parser = argparse.ArgumentParser(
@@ -45,6 +49,8 @@ def criar_parser():
         help="Senha do usuário"
     )
 
+    cadastrar_usuario_parser.set_defaults(func=cadastrar_usuario)
+
     atualizar_email_parser = usuario_subcomandos.add_parser(
         "atualizar-email",
         help="Atualizar e-mail de um usuário"
@@ -62,10 +68,14 @@ def criar_parser():
         help="Novo e-mail do usuário"
     )
 
-    usuario_subcomandos.add_parser(
+    atualizar_email_parser.set_defaults(func=atualizar_email)
+
+    listar_usuarios_parser = usuario_subcomandos.add_parser(
         "listar",
         help="Listar usuários cadastrados"
     )
+
+    listar_usuarios_parser.set_defaults(func=listar_usuarios)
 
     consultar_usuario_parser = usuario_subcomandos.add_parser(
         "consultar",
@@ -77,6 +87,8 @@ def criar_parser():
         required=True,
         help="ID do usuário"
     )
+
+    consultar_usuario_parser.set_defaults(func=consultar_usuario)
 
     tema = comandos.add_parser(
         "tema",
@@ -99,6 +111,8 @@ def criar_parser():
         help="Título do tema"
     )
 
+    criar_tema_parser.set_defaults(func=criar_tema)
+
     deletar_tema_parser = tema_subcomandos.add_parser(
         "deletar",
         help="Deletar um tema cadastrado"
@@ -110,10 +124,27 @@ def criar_parser():
         help="ID do tema"
     )
 
-    tema_subcomandos.add_parser(
+    deletar_tema_parser.set_defaults(func=deletar_tema)
+
+    listar_tema_parser = tema_subcomandos.add_parser(
         "listar",
         help="Listar temas cadastrados"
     )
+
+    listar_tema_parser.set_defaults(func=listar_temas)
+
+    consultar_tema_parser = tema_subcomandos.add_parser(
+        "consultar",
+        help="Consultar um tema cadastrado"
+    )
+
+    consultar_tema_parser.add_argument(
+        "--tema",
+        required=True,
+        help="ID do tema"
+    )
+
+    consultar_tema_parser.set_defaults(func=consultar_tema)
 
     quiz = comandos.add_parser(
         "quiz",
@@ -175,6 +206,21 @@ def criar_parser():
         required=True,
         help="ID do usuario"
     )
+
+    responder_quiz_parser.set_defaults(func=responder_quiz)
+
+    consultar_quiz_parser = quiz_subcomandos.add_parser(
+        "consultar",
+        help="Consultar um quiz cadastrado"
+    )
+
+    consultar_quiz_parser.add_argument(
+        "--quiz",
+        required=True,
+        help="ID do quiz"
+    )
+
+    consultar_quiz_parser.set_defaults(func=consultar_quiz)
 
     adicionar_pergunta_parser = quiz_subcomandos.add_parser(
         "adicionar-pergunta",
@@ -242,10 +288,66 @@ def criar_parser():
         help="Dificuldade da pergunta"
     )
 
-    pergunta_subcomandos.add_parser(
+    criar_pergunta_parser.set_defaults(func=criar_pergunta)
+
+    pergunta_editar_parser = pergunta_subcomandos.add_parser(
+        "editar",
+        help="Editar uma pergunta cadastrada"
+    )
+
+    pergunta_editar_parser.add_argument(
+        "--pergunta",
+        required=True,
+        help="ID da pergunta"
+    )
+
+    pergunta_editar_parser.add_argument(
+        "--enunciado",
+        required=True,
+        help="Novo enunciado da pergunta"
+    )
+
+    pergunta_editar_parser.add_argument(
+        "--alternativas",
+        nargs="+",
+        required=True,
+        help="Novas alternativas da pergunta"
+    )
+
+    pergunta_editar_parser.add_argument(
+        "--indice-resposta",
+        type=int,
+        required=True,
+        help="Índice da alternativa correta"
+    )
+
+    pergunta_editar_parser.add_argument(
+        "--dificuldade",
+        required=True,
+        help="Nova dificuldade da pergunta"
+    )
+
+    pergunta_editar_parser.set_defaults(func=editar_pergunta)
+    
+    perguntas_listar_parser = pergunta_subcomandos.add_parser(
         "listar",
         help="Listar perguntas cadastradas"
     )
+
+    perguntas_listar_parser.set_defaults(func=listar_perguntas)
+
+    perguntas_listar_tema_parser = pergunta_subcomandos.add_parser(
+        "tema",
+        help="Listar perguntas de um tema"
+    )
+
+    perguntas_listar_tema_parser.add_argument(
+        "--tema",
+        required=True,
+        help="ID do tema"
+    )
+
+    perguntas_listar_tema_parser.set_defaults(func=listar_por_tema)
 
     relatorio = comandos.add_parser(
         "relatorio",
@@ -257,27 +359,31 @@ def criar_parser():
         required=True
     )
 
-    relatorio_subcomandos.add_parser(
+    relatorio_perguntas_dificeis_parser = relatorio_subcomandos.add_parser(
         "perguntas-dificeis",
         help="Exibir as perguntas mais erradas"
     )
 
-    relatorio_quiz_parser = relatorio_subcomandos.add_parser(
-        "quiz",
+    relatorio_perguntas_dificeis_parser.set_defaults(func=relatorio_perguntas_dificeis)
+
+    relatorio_tentativa_parser = relatorio_subcomandos.add_parser(
+        "tentativa",
         help="Exibir relatorio de um quiz"
     )
 
-    relatorio_quiz_parser.add_argument(
+    relatorio_tentativa_parser.add_argument(
         "--quiz",
         required=True,
         help="ID do quiz"
     )
 
-    relatorio_quiz_parser.add_argument(
+    relatorio_tentativa_parser.add_argument(
         "--usuario",
         required=True,
         help="ID do usuário"
     )
+
+    relatorio_tentativa_parser.set_defaults(func=relatorio_tentativa)
 
     relatorio_desempenho_parser = relatorio_subcomandos.add_parser(
         "desempenho",
@@ -290,6 +396,8 @@ def criar_parser():
         help="ID do usuário"
     )
 
+    relatorio_desempenho_parser.set_defaults(func=relatorio_desempenho)
+
     relatorio_evolucao_parser = relatorio_subcomandos.add_parser(
         "evolucao",
         help="Exibir evolução de um usuário"
@@ -301,9 +409,26 @@ def criar_parser():
         help="ID do usuário"
     )
 
-    relatorio_subcomandos.add_parser(
+    relatorio_evolucao_parser.set_defaults(func=relatorio_evolucao)
+
+    ranking_parser = relatorio_subcomandos.add_parser(
         "ranking",
         help="Exibir ranking geral dos usuários"
     )
+
+    ranking_parser.set_defaults(func=relatorio_ranking)
+
+    relatorio_quiz_parser = relatorio_subcomandos.add_parser(
+        "quiz",
+        help="Relatório de um quiz"
+    )
+
+    relatorio_quiz_parser.add_argument(
+        "--quiz",
+        required=True,
+        help="ID do quiz"
+    )
+
+    relatorio_quiz_parser.set_defaults(func=relatorio_quiz)
 
     return parser

@@ -77,8 +77,8 @@ class TentativaService:
         if pergunta_id not in [p.id for p in quiz.lista_perguntas]:
             raise ValueError("Essa pergunta não pertence ao quiz!")
 
-        if tempo > quiz.tempo_limite:
-            self.terminar_quiz(tentativa_id, quiz.tempo_limite)
+        if tempo >= quiz.tempo_limite:
+             return self.terminar_quiz(tentativa_id, quiz.tempo_limite)
 
         tentativa.respostas = respostas
         self.tentativa_repo.salvar(tentativa)

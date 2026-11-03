@@ -1,3 +1,4 @@
+import time
 from CLI.apresentacao import desenhar_tabela
 
 def criar_quiz(args, quiz_service):
@@ -78,5 +79,50 @@ def consultar_quiz(args, quiz_repo):
     except ValueError as error:
         print(f"\033[31mErro: {error}\033[0m")
 
-def responder_quiz():
-    ...
+def responder_quiz(args, tentativa_service):
+    tentativa = tentativa_service.iniciar_quiz(
+        usuario_id=args.usuario, 
+        quiz_id=args.quiz
+        )
+    
+    inicio = time.monotonic()
+    
+    perguntas = tentativa.quiz.lista_perguntas
+    respostas = [None for p in perguntas]
+
+    for i, pergunta in enumerate(perguntas, start=1):
+        print(f"{i}. {pergunta.enunciado}")
+        for j, alt in enumerate(pergunta.alternativas, start=1):
+            print(f"{j}) {alt}")
+
+        while True:
+            resposta = int(input("Escolha uma alternativa: "))
+
+            if resposta < 1 or resposta > len(pergunta.alternativas):
+                print("Alternativa inválida! Tente novamente.")
+                continue
+            break
+
+        respostas[i-1] = resposta
+
+        tempo_atual = (time.monotonic() - inicio) / 60
+
+        if tempo_atual >= tentativa.quiz.tempo_limite:
+            print("Tempo esgotado!")
+            break
+
+        tentativa_service.responder_quiz(
+                tentativa_id=tentativa.id,
+                pergunta_id=pergunta.id,
+                respostas=respostas,
+                tempo=(tempo_atual)
+        )
+
+    fim = time.monotonic()
+    tempo_segundos = fim - inicio
+    tempo_minutos = int(tempo_segundos // 60)
+    tentativa = tentativa_service.terminar_quiz(
+        tentativa_id=tentativa.id,
+        tempo_total=tempo_minutos
+    )
+    
