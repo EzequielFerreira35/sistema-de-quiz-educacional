@@ -45,24 +45,25 @@ class UsuarioService:
 
         return usuario
 
+
     def atualizar_email(self, email: str, usuario_id: str) -> Usuario:
         if not isinstance(email, str) or not email.strip():
             raise ValueError("Email deve ser uma string não vazia!")
 
         if not isinstance(usuario_id, str) or not usuario_id.strip():
-            raise ValueError("Usuario_id deve ser uma string não vazia!")  
+            raise ValueError("Usuario_id deve ser uma string não vazia!")
 
         email = email.strip()
         usuario_id = usuario_id.strip()
 
-        usuario = self.repository.buscar_por_email(email)
+        usuario = self.repository.buscar_por_id(usuario_id)
 
         if usuario is None:
-            raise ValueError(f"Não existe usuário com email: {email}")
+            raise ValueError(f"Não existe usuário com ID: {usuario_id}")
 
         usuario_existente = self.repository.buscar_por_email(email)
 
-        if usuario_existente is not None and  usuario_existente.id != usuario.id:
+        if usuario_existente is not None and usuario_existente.id != usuario.id:
             raise ValueError("Email já cadastrado!")
 
         usuario.email = email

@@ -33,7 +33,7 @@ def listar_perguntas(args, pergunta_repo):
 
         cabecalhos = ["ID DA PERGUNTA","ENUNCIADO", "TEMA", "DIFICULDADE", "ALTERNATIVAS"]
         
-        larguras = [40, 52] 
+        larguras = [38, 40, 14, 14, 30]
 
         dados = []
         for pergunta in perguntas:
@@ -56,7 +56,7 @@ def listar_por_tema(args, pergunta_service):
 
         cabecalhos = ["ID DA PERGUNTA","ENUNCIADO", "TEMA", "DIFICULDADE", "ALTERNATIVAS"]
         
-        larguras = [40, 52] 
+        larguras = [38, 55, 20, 18, 45]
 
         dados = []
         for pergunta in perguntas:

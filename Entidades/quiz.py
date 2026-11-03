@@ -55,6 +55,9 @@ class Quiz:
     def titulo(self, valor: str):
         if not isinstance(valor, str) or not valor.strip():
             raise ValueError("O Título deve ser uma string não vazia!")
+
+        if len(valor) > 100:
+            raise ValueError("O Título so pode conter no máximo 100 caracteres!")
         
         self.__titulo = valor.strip()
 

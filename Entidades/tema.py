@@ -35,6 +35,9 @@ class Tema:
         
         if not valor.strip():
             raise ValueError("O nome do tema não pode ser vazio!")
+
+        if len(valor) > 100:
+            raise ValueError("O nome do tema so pode conter no máximo 100 caracteres!")
         
         self.__nome = valor.strip()
 

@@ -44,7 +44,7 @@ def listar_quizzes(args, quiz_repo):
 
 def adicionar_pergunta(args, quiz_service):
     try:
-        adicionada = quiz_service.adicionar_pegunta(
+        adicionada = quiz_service.adicionar_pergunta(
             quiz_id=args.quiz, 
             pergunta_id=args.pergunta
             )
@@ -105,7 +105,7 @@ def responder_quiz(args, tentativa_service):
 
         respostas[i-1] = resposta
 
-        tempo_atual = (time.monotonic() - inicio) / 60
+        tempo_atual = int((time.monotonic() - inicio) / 60)
 
         if tempo_atual >= tentativa.quiz.tempo_limite:
             print("Tempo esgotado!")

@@ -284,6 +284,7 @@ def criar_parser():
 
     criar_pergunta_parser.add_argument(
         "--dificuldade",
+        choices=["facil", "medio", "dificil"],
         required=True,
         help="Dificuldade da pergunta"
     )
@@ -362,6 +363,13 @@ def criar_parser():
     relatorio_perguntas_dificeis_parser = relatorio_subcomandos.add_parser(
         "perguntas-dificeis",
         help="Exibir as perguntas mais erradas"
+    )
+
+    relatorio_perguntas_dificeis_parser.add_argument(
+        "--limite",
+        type=int,
+        required=True,
+        help="Limite de perguntas que devem sesr listadas"
     )
 
     relatorio_perguntas_dificeis_parser.set_defaults(func=relatorio_perguntas_dificeis)

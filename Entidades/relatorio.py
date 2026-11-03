@@ -19,7 +19,7 @@ class Relatorio:
         self.tipo = tipo
         self.nome = nome
         self.__conteudo = conteudo
-
+    
     @property
     def data_gerada(self) -> datetime:
         return self.__data

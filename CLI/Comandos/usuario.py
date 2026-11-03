@@ -10,11 +10,11 @@ def cadastrar_usuario(args, usuario_service):
 
         print("\n=== USUÁRIO CADASTRADO ===")
         print("Usuário cadastrado com sucesso!")
-        print(f"Nome: {usuario.nome}")
+        print(f"Nome: {usuario.username}")
         print(f"ID: {usuario.id}")
 
     except ValueError as error:
-        print(f"Erro: {error}")
+        print(f"\033[31mErro: {error}\033[0m")
 
 
 def listar_usuarios(args, usuario_repo):
@@ -27,11 +27,11 @@ def listar_usuarios(args, usuario_repo):
 
         cabecalhos = ["ID DO USUÁRIO", "NOME DO USUÁRIO", "EMAIL DO USUÁRIO"]
         
-        larguras = [40, 52] 
+        larguras = [38, 40, 52]
 
         dados = []
         for usuario in usuarios:
-            dados.append([usuario.id, usuario.nome, usuario.email])
+            dados.append([usuario.id, usuario.username, usuario.email])
 
         print("\n=== USUÁRIOS CADASTRADOS ===")
 
@@ -42,17 +42,17 @@ def listar_usuarios(args, usuario_repo):
 
 def consultar_usuario(args, usuario_repo):
     try:
-        usuario = usuario_repo.buscaar_por_id(usuario_id = args.usuario)
+        usuario = usuario_repo.buscar_por_id(usuario_id = args.usuario)
 
         if usuario is None:
             print("\n\033[Esse usuário não existe.\033[0m")
 
         cabecalhos = ["ID DO USUÁRIO", "NOME DO USUÁRIO", "EMAIL DO USUÁRIO"]
         
-        larguras = [40, 52] 
+        larguras = [38, 40, 52]
 
         dados = []
-        dados.append([usuario.id, usuario.nome, usuario.email])
+        dados.append([usuario.id, usuario.username, usuario.email])
 
         print("\n=== RESULTADO DA BUSCA ===")
 
@@ -63,16 +63,16 @@ def consultar_usuario(args, usuario_repo):
 
 def atualizar_email(args, usuario_service):
     try:
-        usuario = usuario_service(
+        usuario = usuario_service.atualizar_email(
             email=args.novo_email,
-            usuario_id=usuario
+            usuario_id=args.usuario
         )
 
         print("\n=== EMAIL ATUALIZADO CO SUCESSO ===")
         print("O novo email foi atualizado com sucesso!")
-        print(f"Nome: {usuario.nome}")
+        print(f"Nome: {usuario.username}")
         print(f"Novo email: {usuario.email}")
         print(f"ID: {usuario.id}")
 
     except ValueError as error:
-        print(f"Erro: {error}")
+        print(f"\033[31mErro: {error}\033[0m")

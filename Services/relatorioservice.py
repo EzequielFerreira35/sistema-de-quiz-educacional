@@ -33,7 +33,7 @@ class RelatorioService(ValidadorIdMixin):
         return [tentativa["pontuacao"] / maximo for tentativa in concluidas]
 
     def _maximo(self, quiz_id: str):
-        quiz_id = self._validar_id(quiz_id)
+        quiz_id = self._validar_id(quiz_id, "quiz_id")
 
         quiz = self.quiz_repo.buscar_por_id(quiz_id)
 
@@ -119,7 +119,7 @@ class RelatorioService(ValidadorIdMixin):
                     "id": usuario,
                     "nome": dados["nome"],
                     "pontuacao_total": dados["pontuacao_total"],
-                    "quantidade_tentativas": dados["quantidade_tentativa"],
+                    "quantidade_tentativas": dados["quantidade_tentativas"],
                     "pontuacao_media": dados["pontuacao_total"] / dados["quantidade_tentativas"]
                 }
             )
@@ -195,7 +195,7 @@ class RelatorioService(ValidadorIdMixin):
         return questoes_mais_erradas[:limite]
 
     def evolucao_usuario(self, usuario_id: str) -> list[dict]:
-        usuario_id = self._validar_id(usuario_id)
+        usuario_id = self._validar_id(usuario_id, "usuario_id")
 
         if self.usuario_repo.buscar_por_id(usuario_id) is None:
             raise ValueError("Esse usuário não existe!")

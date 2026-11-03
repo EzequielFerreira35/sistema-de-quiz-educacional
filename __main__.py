@@ -1,32 +1,10 @@
 import argparse
-from CLI.parser import criar_parser
-from CLI.Comandos.quiz import criar_quiz, listar_quizzes, adicionar_pergunta, consultar_quiz, responder_quiz
-from CLI.Comandos.relatorio import relatorio_desempenho, relatorio_ranking, relatorio_evolucao, relatorio_perguntas_dificeis, relatorio_tentativa, relatorio_quiz
-from CLI.Comandos.pergunta import criar_pergunta, editar_pergunta, listar_perguntas, listar_por_tema
-from CLI.Comandos.usuario import cadastrar_usuario, consultar_usuario, atualizar_email, listar_usuarios
-from CLI.Comandos.tema import criar_tema, consultar_tema, listar_temas, deletar_tema
+from CLI import criar_parser
+from CLI.Comandos import *
 
-from Repository.Inicializador import InicializarDataBase
-from Repository.QuizRepository import QuizRepositorySQLite
-from Repository.PerguntaRepository import PerguntaRepositorySQLite
-from Repository.TemaRepository import TemaRepositorySQLite
-from Repository.UsuarioRepository import UsuarioRepositorySQLite
-from Repository.TentativaRepository import TentativaRepository
+from Repository import *
+from Services import *
 
-from Services.perguntaservice import PerguntaService
-from Services.quizservice import QuizService
-from Services.relatorioservice import RelatorioService
-from Services.temaservice import TemaService
-from Services.tentativaservice import TentativaService
-from Services.usuarioservice import UsuarioService
-
-from Entidades.tema import Tema
-from Entidades.usuario import Usuario
-from Entidades.pergunta import Pergunta
-from Entidades.relatorio import Relatorio
-from Entidades.quiz import Quiz
-
-from Services.quizservice import QuizService
 
 def main():
     inicializador = InicializarDataBase()
@@ -34,13 +12,34 @@ def main():
 
     quiz_repo = QuizRepositorySQLite()
     pergunta_repo = PerguntaRepositorySQLite()
+    tema_repo = TemaRepositorySQLite()
+    usuario_repo = UsuarioRepositorySQLite()
+    tentativa_repo = TentativaRepositorySQLite()
 
     quiz_service = QuizService(quiz_repo, pergunta_repo)
+    pergunta_service = PerguntaService(pergunta_repo, tema_repo)
+    tentativa_service = TentativaService(usuario_repo, quiz_repo, tentativa_repo)
+    relatorio_service = RelatorioService(tentativa_repo, quiz_repo, usuario_repo)
+    usuario_service = UsuarioService(usuario_repo)
+    tema_service = TemaService(tema_repo, pergunta_repo)
+
 
     parser = criar_parser()
     args = parser.parse_args()
 
-    if args.func == criar_quiz:
+    if args.func == criar_pergunta:
+        args.func(args, pergunta_service, tema_repo)
+
+    elif args.func == listar_perguntas:
+        args.func(args, pergunta_repo)
+
+    elif args.func == listar_por_tema:
+        args.func(args, pergunta_service)
+
+    elif args.func == editar_pergunta:
+        args.func(args, pergunta_service)
+
+    elif args.func == criar_quiz:
         args.func(args, quiz_service)
 
     elif args.func == listar_quizzes:
@@ -48,6 +47,56 @@ def main():
 
     elif args.func == adicionar_pergunta:
         args.func(args, quiz_service)
+
+    elif args.func == consultar_quiz:
+        args.func(args, quiz_repo)
+
+    elif args.func == responder_quiz:
+        args.func(args, tentativa_service)
+
+    elif args.func == relatorio_perguntas_dificeis:
+        args.func(args, relatorio_service)
+
+    elif args.func == relatorio_desempenho:
+        args.func(args, relatorio_service, usuario_repo)
+
+    elif args.func == relatorio_evolucao:
+        args.func(args, relatorio_service)
+
+    elif args.func == relatorio_tentativa:
+        args.func(args, relatorio_service, tentativa_repo)
+
+    elif args.func == relatorio_ranking:
+        args.func(args, relatorio_service)
+
+    elif args.func == relatorio_quiz:
+        args.func(args, relatorio_service, quiz_repo)
+
+    elif args.func == criar_tema:
+        args.func(args, tema_service)
+
+    elif args.func == listar_temas:
+        args.func(args, tema_repo)
+
+    elif args.func == consultar_tema:
+        args.func(args, tema_repo)
+
+    elif args.func == deletar_tema:
+        args.func(args, tema_service)
+
+    elif args.func == cadastrar_usuario:
+        args.func(args, usuario_service)
+
+    elif args.func == listar_usuarios:
+        args.func(args, usuario_repo)
+
+    elif args.func == consultar_usuario:
+        args.func(args, usuario_repo)
+
+    elif args.func == atualizar_email:
+        args.func(args, usuario_service)
+    else:
+        parser.print_help()
 
 if __name__ == "__main__":
     main()

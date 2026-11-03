@@ -3,7 +3,7 @@ from CLI.apresentacao import desenhar_tabela
 def criar_tema(args, tema_service):
     try:
         tema = tema_service.criar_tema(
-            nome=args.nome,
+            nome=args.titulo,
         )
 
         print("\n=== TEMA CRIADO ===")
@@ -40,7 +40,7 @@ def listar_temas(args, tema_repo):
 
 def consultar_tema(args, tema_repo):
     try:
-        tema = tema_repo.buscaar_por_id(tema_id = args.tema)
+        tema = tema_repo.buscar_por_id(tema_id = args.tema)
 
         if tema is None:
             print("\n\033[Esse tema não existe.\033[0m")

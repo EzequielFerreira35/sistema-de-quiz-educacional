@@ -47,6 +47,10 @@ class Usuario:
     def username(self, valor: str):
         if not isinstance(valor, str) or not valor.strip():
             raise ValueError("Nome deve ser do tipo string não vazio!")
+
+        if len(valor) > 100:
+            raise ValueError("O nome do usuário so pode conter no máximo 100 caracteres!")
+
         self.__username = valor.strip()
     
     @property

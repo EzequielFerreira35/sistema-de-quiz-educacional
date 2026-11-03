@@ -2,7 +2,7 @@ from CLI.apresentacao import desenhar_tabela, desenhar_card
 
 def relatorio_perguntas_dificeis(args, relatorio_service):
     try:
-        relatorio = relatorio_service.gerar_questoes_mais_erradas()
+        relatorio = relatorio_service.gerar_questoes_mais_erradas(args.limite)
 
         if relatorio is None or relatorio is []:
             print("\n\033[31mNenhuma pergunta cadastrado.\033[0m")
@@ -10,7 +10,7 @@ def relatorio_perguntas_dificeis(args, relatorio_service):
 
         cabecalhos = ["ID DA PERGUNTA", "ENUNCIADO", "TEMA", "TOTAL RESPOSTAS", "ACERTOS", "TAXA  DE ERROS"]
         
-        larguras = [40, 52] 
+        larguras = [38, 55, 20, 22, 18, 20]
 
         dados = []
         for pergunta in relatorio:
@@ -20,7 +20,7 @@ def relatorio_perguntas_dificeis(args, relatorio_service):
                 pergunta["nome_tema"], 
                 pergunta["total_respostas"], 
                 pergunta["acertos"], 
-                pergunta["taxa_erros"]
+                f'{pergunta["taxa_erros"] * 100:.1f}%'
             ])
 
         print("\n=== PERGUNTAS MAIS DIFíCEIS ===")
@@ -30,10 +30,10 @@ def relatorio_perguntas_dificeis(args, relatorio_service):
     except ValueError as error:
         print(f"\033[31mErro: {error}\033[0m")
 
-def relatorio_desempenho(args, relatorio_service, usuario_service):
+def relatorio_desempenho(args, relatorio_service, usuario_repo):
     try:
-        relatorio = relatorio_service.gerar_desempenho_usuario()
-        usuario = usuario_service.buscar_por_id(args.usuario)
+        relatorio = relatorio_service.gerar_desempenho_usuario(args.usuario)
+        usuario = usuario_repo.buscar_por_id(args.usuario)
 
         if relatorio is None or relatorio is []:
             print("\n\033[31mNenhuma pergunta cadastrado.\033[0m")
@@ -41,25 +41,27 @@ def relatorio_desempenho(args, relatorio_service, usuario_service):
 
         cabecalhos = ["TEMA", "TOTAL RESPOSTAS", "ACERTOS", "TAXA DE ACERTOS"]
         
-        larguras = [40, 52]
+        larguras =  [30, 22, 18, 22]
         dados = {}
 
         for chave, valor in relatorio.items():
-            if chave == "tema":
+            if chave == "temas":
                 break
             dados[chave] = valor
             
 
         dados_tema = []
-        for tema in relatorio["tema"]:
+        for tema in relatorio["temas"]:
             dados_tema.append([
                 tema["nome_tema"], 
-                tema["total_respostas"], 
+                tema["total_respostas"],
                 tema["acertos"], 
-                tema["taxa_acertos"], 
+                f'{tema["taxa_acertos"] * 100:.1f}%'
             ])
 
-        desenhar_card(usuario.nome, usuario.id, dados)
+        print("\n=== DESEMPENHO GERAL DO USUÁRIO  ===")
+
+        desenhar_card(usuario.username, usuario.id, dados)
 
         print("\n=== DESEMPENHO DO USUÁRIO NOS TEMAS ===")
         
@@ -79,16 +81,16 @@ def relatorio_evolucao(args, relatorio_service):
 
         cabecalhos = ["DATA", "QUIZ", " PERCENTUAL PONTUACÃO", "PONTUAÇÃO", "TEMPO TOTAL"]
         
-        larguras = [40, 52] 
+        larguras = [22, 35, 25, 18, 18]
 
         dados = []
         for tentativa in tentativas:
             dados.append([
                 tentativa["data"], 
                 tentativa["quiz"], 
-                tentativa["percentual_pontuacao"], 
+                f'{tentativa["percentual_pontuacao"] * 100:.1f}%', 
                 tentativa["pontuacao"], 
-                tentativas["tempo_total"]
+                f'{tentativa["tempo_total"]} min'
             ])
 
         print("\n=== EVOLUÇÃO DO USUÁRIO ===")
@@ -113,7 +115,7 @@ def relatorio_tentativa(args, relatorio_service, tentativa_repo):
 
         print("\n=== RELÁTORIO ===")
 
-        desenhar_card(tentativa.usuario.nome, tentativa.usuario.id, dados)
+        desenhar_card(tentativa.usuario.username, tentativa.usuario.id, dados)
 
     except ValueError as error:
         print(f"\033[31mErro: {error}\033[0m")  
@@ -128,7 +130,7 @@ def relatorio_ranking(args, relatorio_service):
 
         cabecalhos = ["POSIÇÃO", "ID DO USUÁRIO", "NOME", " PONTUACÃO TOTAL", "QUANTIDADE TENTATIVAS", "PONTUAÇÃO MÉDIA"]
         
-        larguras = [40, 52] 
+        larguras = [12, 38, 25, 20, 28, 20]
 
         dados = []
         for usuario in usuarios:
@@ -161,13 +163,13 @@ def relatorio_quiz(args, relatorio_service, quiz_repo):
 
         dados = {}
 
-        for chave, valor in taxa_aprovacao:
+        for chave, valor in taxa_aprovacao.items():
             dados[chave] = valor
 
-        for chave, valor in distribuicao:
-            dados[chave] - valor
+        for chave, valor in distribuicao.items():
+            dados[chave] = valor
 
-        desenhar_card(args.quiz, quiz.nome, dados)
+        desenhar_card(quiz.titulo, args.quiz, dados)
 
     except ValueError as error:
         print(f"\033[31mErro: {error}\033[0m") 
