@@ -1,7 +1,7 @@
 from .test_entidades import *
-from Repository.QuizRepository import QuizRepositorySQLite
-from Repository.TemaRepository import TemaRepositorySQLite
-from Repository.PerguntaRepository import PerguntaRepositorySQLite
+from src.Repository.QuizRepository import QuizRepositorySQLite
+from src.Repository.TemaRepository import TemaRepositorySQLite
+from src.Repository.PerguntaRepository import PerguntaRepositorySQLite
 
 # tema_repo = TemaRepositorySQLite()
 # tema_repo.salvar(tema_algoritmos)

@@ -1,7 +1,7 @@
-from Repository.TentativaRepository import TentativaRepository
-from Repository.QuizRepository import QuizRepository
-from Repository.UsuarioRepository import UsuarioRepository
-from configmanager import ConfigManager
+from src.Repository.TentativaRepository import TentativaRepository
+from src.Repository.QuizRepository import QuizRepository
+from src.Repository.UsuarioRepository import UsuarioRepository
+from src.configmanager import ConfigManager
 from .mixins import ValidadorIdMixin
 
 class RelatorioService(ValidadorIdMixin):

@@ -1,8 +1,8 @@
-from Repository.TentativaRepository import TentativaRepository
-from Repository.QuizRepository import QuizRepository
-from Repository.UsuarioRepository import UsuarioRepository
-from Entidades.tentativa import Tentativa
-from configmanager import ConfigManager
+from src.Repository.TentativaRepository import TentativaRepository
+from src.Repository.QuizRepository import QuizRepository
+from src.Repository.UsuarioRepository import UsuarioRepository
+from src.Entidades.tentativa import Tentativa
+from src.configmanager import ConfigManager
 
 class TentativaService:
     """

@@ -1,0 +1,254 @@
+{
+    "temas": [
+        { "nome": "Python" },
+        { "nome": "Banco de Dados" },
+        { "nome": "JavaScript" },
+        { "nome": "Git" }
+    ],
+    "perguntas": [
+        {
+            "tema": "Python",
+            "enunciado": "Qual palavra-chave define uma função em Python?",
+            "alternativas": ["function", "def", "func", "define"],
+            "indice_resposta": 1,
+            "dificuldade": "facil"
+        },
+        {
+            "tema": "Python",
+            "enunciado": "Qual função exibe texto na tela em Python?",
+            "alternativas": ["echo", "print", "console.log", "write"],
+            "indice_resposta": 1,
+            "dificuldade": "facil"
+        },
+        {
+            "tema": "Python",
+            "enunciado": "Qual estrutura de dados em Python é imutável?",
+            "alternativas": ["list", "dict", "tuple", "set"],
+            "indice_resposta": 2,
+            "dificuldade": "medio"
+        },
+        {
+            "tema": "Python",
+            "enunciado": "O que o comando len([1, 2, 3]) retorna?",
+            "alternativas": ["2", "3", "4", "Erro"],
+            "indice_resposta": 1,
+            "dificuldade": "facil"
+        },
+        {
+            "tema": "Python",
+            "enunciado": "Qual símbolo inicia um comentário de uma linha em Python?",
+            "alternativas": ["//", "#", "--", "/*"],
+            "indice_resposta": 1,
+            "dificuldade": "facil"
+        },
+        {
+            "tema": "Python",
+            "enunciado": "O que a palavra-chave yield faz dentro de uma função?",
+            "alternativas": [
+                "Encerra o programa",
+                "Transforma a função em um gerador",
+                "Declara uma variável global",
+                "Importa um módulo"
+            ],
+            "indice_resposta": 1,
+            "dificuldade": "dificil"
+        },
+        {
+            "tema": "Banco de Dados",
+            "enunciado": "Qual comando SQL é usado para consultar dados de uma tabela?",
+            "alternativas": ["GET", "SELECT", "FETCH", "READ"],
+            "indice_resposta": 1,
+            "dificuldade": "facil"
+        },
+        {
+            "tema": "Banco de Dados",
+            "enunciado": "O que é uma chave primária?",
+            "alternativas": [
+                "Coluna que referencia outra tabela",
+                "Coluna que identifica unicamente cada registro",
+                "Coluna que aceita valores duplicados",
+                "Índice de texto completo"
+            ],
+            "indice_resposta": 1,
+            "dificuldade": "facil"
+        },
+        {
+            "tema": "Banco de Dados",
+            "enunciado": "Qual comando remove todos os registros de uma tabela, mantendo a estrutura?",
+            "alternativas": ["DROP TABLE", "TRUNCATE TABLE", "REMOVE", "DELETE DATABASE"],
+            "indice_resposta": 1,
+            "dificuldade": "medio"
+        },
+        {
+            "tema": "Banco de Dados",
+            "enunciado": "Qual cláusula filtra grupos após o GROUP BY?",
+            "alternativas": ["WHERE", "HAVING", "FILTER", "LIMIT"],
+            "indice_resposta": 1,
+            "dificuldade": "medio"
+        },
+        {
+            "tema": "Banco de Dados",
+            "enunciado": "Qual JOIN retorna todos os registros da tabela da esquerda, mesmo sem correspondência na direita?",
+            "alternativas": ["INNER JOIN", "LEFT JOIN", "RIGHT JOIN", "CROSS JOIN"],
+            "indice_resposta": 1,
+            "dificuldade": "medio"
+        },
+        {
+            "tema": "Banco de Dados",
+            "enunciado": "Qual propriedade ACID garante que uma transação seja totalmente executada ou totalmente desfeita?",
+            "alternativas": ["Consistência", "Isolamento", "Atomicidade", "Durabilidade"],
+            "indice_resposta": 2,
+            "dificuldade": "dificil"
+        },
+        {
+            "tema": "JavaScript",
+            "enunciado": "Qual palavra-chave declara uma constante em JavaScript?",
+            "alternativas": ["var", "let", "const", "static"],
+            "indice_resposta": 2,
+            "dificuldade": "facil"
+        },
+        {
+            "tema": "JavaScript",
+            "enunciado": "Qual método adiciona um elemento ao final de um array?",
+            "alternativas": ["push", "pop", "shift", "unshift"],
+            "indice_resposta": 0,
+            "dificuldade": "facil"
+        },
+        {
+            "tema": "JavaScript",
+            "enunciado": "O que typeof null retorna em JavaScript?",
+            "alternativas": ["\"null\"", "\"undefined\"", "\"object\"", "\"number\""],
+            "indice_resposta": 2,
+            "dificuldade": "dificil"
+        },
+        {
+            "tema": "JavaScript",
+            "enunciado": "Qual operador compara valor e tipo ao mesmo tempo?",
+            "alternativas": ["=", "==", "===", "!="],
+            "indice_resposta": 2,
+            "dificuldade": "medio"
+        },
+        {
+            "tema": "JavaScript",
+            "enunciado": "Qual método transforma cada elemento de um array e retorna um novo array?",
+            "alternativas": ["forEach", "map", "filter", "reduce"],
+            "indice_resposta": 1,
+            "dificuldade": "medio"
+        },
+        {
+            "tema": "JavaScript",
+            "enunciado": "O que uma Promise representa?",
+            "alternativas": [
+                "Uma função síncrona",
+                "O resultado eventual de uma operação assíncrona",
+                "Um laço de repetição",
+                "Um tipo de variável global"
+            ],
+            "indice_resposta": 1,
+            "dificuldade": "medio"
+        },
+        {
+            "tema": "Git",
+            "enunciado": "Qual comando cria um novo repositório Git?",
+            "alternativas": ["git start", "git init", "git new", "git create"],
+            "indice_resposta": 1,
+            "dificuldade": "facil"
+        },
+        {
+            "tema": "Git",
+            "enunciado": "Qual comando envia commits locais para o repositório remoto?",
+            "alternativas": ["git pull", "git push", "git send", "git commit"],
+            "indice_resposta": 1,
+            "dificuldade": "facil"
+        },
+        {
+            "tema": "Git",
+            "enunciado": "Qual comando cria e já muda para uma nova branch?",
+            "alternativas": ["git branch -d", "git checkout -b", "git merge", "git switch -r"],
+            "indice_resposta": 1,
+            "dificuldade": "medio"
+        },
+        {
+            "tema": "Git",
+            "enunciado": "Qual comando mostra o histórico de commits?",
+            "alternativas": ["git log", "git history", "git status", "git show-all"],
+            "indice_resposta": 0,
+            "dificuldade": "facil"
+        },
+        {
+            "tema": "Git",
+            "enunciado": "O que o comando git stash faz?",
+            "alternativas": [
+                "Apaga o último commit",
+                "Guarda alterações temporariamente sem commitar",
+                "Cria uma tag",
+                "Une duas branches"
+            ],
+            "indice_resposta": 1,
+            "dificuldade": "medio"
+        },
+        {
+            "tema": "Git",
+            "enunciado": "Qual comando reaplica commits sobre outra base, reescrevendo o histórico?",
+            "alternativas": ["git rebase", "git cherry", "git clone", "git fetch"],
+            "indice_resposta": 0,
+            "dificuldade": "dificil"
+        }
+    ],
+    "quizzes": [
+        {
+            "titulo": "Quiz de Python",
+            "perguntas": [
+                "Qual palavra-chave define uma função em Python?",
+                "Qual função exibe texto na tela em Python?",
+                "Qual estrutura de dados em Python é imutável?",
+                "O que o comando len([1, 2, 3]) retorna?",
+                "Qual símbolo inicia um comentário de uma linha em Python?",
+                "O que a palavra-chave yield faz dentro de uma função?"
+            ]
+        },
+        {
+            "titulo": "Quiz de Banco de Dados",
+            "perguntas": [
+                "Qual comando SQL é usado para consultar dados de uma tabela?",
+                "O que é uma chave primária?",
+                "Qual comando remove todos os registros de uma tabela, mantendo a estrutura?",
+                "Qual cláusula filtra grupos após o GROUP BY?",
+                "Qual JOIN retorna todos os registros da tabela da esquerda, mesmo sem correspondência na direita?",
+                "Qual propriedade ACID garante que uma transação seja totalmente executada ou totalmente desfeita?"
+            ]
+        },
+        {
+            "titulo": "Quiz de JavaScript",
+            "perguntas": [
+                "Qual palavra-chave declara uma constante em JavaScript?",
+                "Qual método adiciona um elemento ao final de um array?",
+                "O que typeof null retorna em JavaScript?",
+                "Qual operador compara valor e tipo ao mesmo tempo?",
+                "Qual método transforma cada elemento de um array e retorna um novo array?",
+                "O que uma Promise representa?"
+            ]
+        },
+        {
+            "titulo": "Quiz de Git",
+            "perguntas": [
+                "Qual comando cria um novo repositório Git?",
+                "Qual comando envia commits locais para o repositório remoto?",
+                "Qual comando cria e já muda para uma nova branch?",
+                "Qual comando mostra o histórico de commits?",
+                "O que o comando git stash faz?",
+                "Qual comando reaplica commits sobre outra base, reescrevendo o histórico?"
+            ]
+        },
+        {
+            "titulo": "Quiz Misto Facil",
+            "perguntas": [
+                "Qual palavra-chave define uma função em Python?",
+                "Qual comando SQL é usado para consultar dados de uma tabela?",
+                "Qual palavra-chave declara uma constante em JavaScript?",
+                "Qual comando cria um novo repositório Git?",
+                "Qual comando envia commits locais para o repositório remoto?"
+            ]
+        }
+    ]
+}

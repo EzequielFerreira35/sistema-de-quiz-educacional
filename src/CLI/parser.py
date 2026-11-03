@@ -1,5 +1,7 @@
 import argparse
 
+from src.Seed.insirir_dados_iniciais import dados_iniciais
+
 from .Comandos.quiz import criar_quiz, listar_quizzes, adicionar_pergunta, consultar_quiz, responder_quiz
 from .Comandos.relatorio import relatorio_desempenho, relatorio_ranking, relatorio_evolucao, relatorio_perguntas_dificeis, relatorio_tentativa, relatorio_quiz
 from .Comandos.pergunta import criar_pergunta, editar_pergunta, listar_perguntas, listar_por_tema
@@ -438,5 +440,12 @@ def criar_parser():
     )
 
     relatorio_quiz_parser.set_defaults(func=relatorio_quiz)
+
+    seed_parser = comandos.add_parser(
+        "seed",
+        help="Popular Banco de Dados"
+    )
+
+    seed_parser.set_defaults(func=dados_iniciais)
 
     return parser

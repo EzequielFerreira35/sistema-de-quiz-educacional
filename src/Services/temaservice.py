@@ -1,6 +1,6 @@
-from Repository.TemaRepository import TemaRepository
-from Repository.PerguntaRepository import PerguntaRepository
-from Entidades.tema import Tema
+from src.Repository.TemaRepository import TemaRepository
+from src.Repository.PerguntaRepository import PerguntaRepository
+from src.Entidades.tema import Tema
 
 
 class TemaService:

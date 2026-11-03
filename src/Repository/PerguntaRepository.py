@@ -1,7 +1,7 @@
 import uuid
 
 from abc import ABC, abstractmethod
-from Entidades.pergunta import Pergunta
+from src.Entidades.pergunta import Pergunta
 from .sqlite_base import SQLiteBase
 
 

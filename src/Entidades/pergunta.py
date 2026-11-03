@@ -1,6 +1,6 @@
 import uuid
 from .tema import Tema
-from configmanager import ConfigManager
+from src.configmanager import ConfigManager
 
 class Pergunta:
     """

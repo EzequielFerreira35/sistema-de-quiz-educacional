@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from Entidades.tentativa import Tentativa
+from src.Entidades.tentativa import Tentativa
 from .sqlite_base import SQLiteBase
 from .QuizRepository import QuizRepositorySQLite
 from .UsuarioRepository import UsuarioRepositorySQLite

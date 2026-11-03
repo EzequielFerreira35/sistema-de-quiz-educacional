@@ -1,6 +1,6 @@
 import uuid
 from .pergunta import Pergunta
-from configmanager import ConfigManager
+from src.configmanager import ConfigManager
 
 class Quiz:
     """

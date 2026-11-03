@@ -1,6 +1,6 @@
-from Entidades.tema import Tema
-from Entidades.pergunta import Pergunta
-from Entidades.quiz import Quiz
+from src.Entidades.tema import Tema
+from src.Entidades.pergunta import Pergunta
+from src.Entidades.quiz import Quiz
 
 tema_python = Tema(nome="Python")
 tema_poo = Tema(nome="Programação Orientada a Objetos")

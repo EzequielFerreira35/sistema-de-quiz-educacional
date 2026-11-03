@@ -1,9 +1,11 @@
 import argparse
-from CLI import criar_parser
-from CLI.Comandos import *
+from src.CLI import criar_parser
+from src.CLI.Comandos import *
 
-from Repository import *
-from Services import *
+from src.Repository import *
+from src.Services import *
+
+from src.Seed import *
 
 
 def main():
@@ -95,6 +97,9 @@ def main():
 
     elif args.func == atualizar_email:
         args.func(args, usuario_service)
+
+    elif args.func == dados_iniciais:
+        args.func(args, tema_service, pergunta_service, quiz_service, tema_repo)
     else:
         parser.print_help()
 

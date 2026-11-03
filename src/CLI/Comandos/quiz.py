@@ -1,5 +1,5 @@
 import time
-from CLI.apresentacao import desenhar_tabela
+from src.CLI.apresentacao import desenhar_tabela
 
 def criar_quiz(args, quiz_service):
     try:

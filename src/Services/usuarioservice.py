@@ -1,7 +1,7 @@
 import re
 
-from Entidades.usuario import Usuario
-from Repository.UsuarioRepository import UsuarioRepository
+from src.Entidades.usuario import Usuario
+from src.Repository.UsuarioRepository import UsuarioRepository
 from .hash import HashServices
 
 

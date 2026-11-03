@@ -1,4 +1,4 @@
-from CLI.apresentacao import desenhar_tabela, desenhar_card
+from src.CLI.apresentacao import desenhar_tabela, desenhar_card
 
 def relatorio_perguntas_dificeis(args, relatorio_service):
     try:

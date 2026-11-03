@@ -1,7 +1,7 @@
-from Entidades.pergunta import Pergunta
-from Entidades.tema import Tema
-from Repository.PerguntaRepository import PerguntaRepository
-from Repository.TemaRepository import TemaRepository
+from src.Entidades.pergunta import Pergunta
+from src.Entidades.tema import Tema
+from src.Repository.PerguntaRepository import PerguntaRepository
+from src.Repository.TemaRepository import TemaRepository
 
 class PerguntaService:
     """

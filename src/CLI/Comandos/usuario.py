@@ -1,4 +1,4 @@
-from CLI.apresentacao import desenhar_tabela
+from src.CLI.apresentacao import desenhar_tabela
 
 def cadastrar_usuario(args, usuario_service):
     try:

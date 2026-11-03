@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from Entidades.usuario import Usuario
+from src.Entidades.usuario import Usuario
 from .sqlite_base import SQLiteBase
 
 

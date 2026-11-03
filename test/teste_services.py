@@ -1,22 +1,22 @@
 import tempfile
 from pathlib import Path
-from Repository.sqlite_base import SQLiteBase
+from src.Repository.sqlite_base import SQLiteBase
 SQLiteBase._CAMINHO_DB = Path(tempfile.mkdtemp()) / "t.db"
 
-from Repository.Inicializador import InicializarDataBase
+from src.Repository.Inicializador import InicializarDataBase
 InicializarDataBase()
 
-from Repository.QuizRepository import QuizRepositorySQLite
-from Repository.UsuarioRepository import UsuarioRepositorySQLite
-from Repository.TentativaRepository import TentativaRepositorySQLite
-from Repository.PerguntaRepository import PerguntaRepositorySQLite
-from Repository. TemaRepository import TemaRepositorySQLite
+from src.Repository.QuizRepository import QuizRepositorySQLite
+from src.Repository.UsuarioRepository import UsuarioRepositorySQLite
+from src.Repository.TentativaRepository import TentativaRepositorySQLite
+from src.Repository.PerguntaRepository import PerguntaRepositorySQLite
+from src.Repository.TemaRepository import TemaRepositorySQLite
 
-from Services.quizservice import QuizService
-from Services.usuarioservice import UsuarioService
-from Services.tentativaservice import TentativaService
-from Services.perguntaservice import PerguntaService
-from Services.temaservice import TemaService
+from src.Services.quizservice import QuizService
+from src.Services.usuarioservice import UsuarioService
+from src.Services.tentativaservice import TentativaService
+from src.Services.perguntaservice import PerguntaService
+from src.Services.temaservice import TemaService
 
 quiz_repo = QuizRepositorySQLite()
 usuario_repo = UsuarioRepositorySQLite()

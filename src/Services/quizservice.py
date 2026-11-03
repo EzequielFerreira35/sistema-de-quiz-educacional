@@ -1,7 +1,7 @@
-from Repository.QuizRepository import QuizRepository
-from Repository.PerguntaRepository import PerguntaRepository
-from Entidades.pergunta import Pergunta
-from Entidades.quiz import Quiz
+from src.Repository.QuizRepository import QuizRepository
+from src.Repository.PerguntaRepository import PerguntaRepository
+from src.Entidades.pergunta import Pergunta
+from src.Entidades.quiz import Quiz
 
 class QuizService:
     """

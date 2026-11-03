@@ -1,4 +1,4 @@
-from CLI.apresentacao import desenhar_tabela
+from src.CLI.apresentacao import desenhar_tabela
 
 def criar_tema(args, tema_service):
     try:
